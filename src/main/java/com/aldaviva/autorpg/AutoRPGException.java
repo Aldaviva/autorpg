@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
-import com.aldaviva.autorpg.irc.Message;
-import com.aldaviva.autorpg.irc.PlayerAction;
+import com.aldaviva.autorpg.display.irc.Message;
+import com.aldaviva.autorpg.display.irc.PlayerAction;
 
 public abstract class AutoRPGException extends Exception {
 

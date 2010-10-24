@@ -2,12 +2,16 @@ package com.aldaviva.autorpg.game.events;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import com.aldaviva.autorpg.AutoRPGException.NotEnoughPlayersError;
 import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.data.entities.Item;
+import com.aldaviva.autorpg.display.BulletinManager;
 import com.aldaviva.autorpg.game.CharacterItemManager;
 
+@Configurable
 public class FindItem extends RandomEvent {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(CalamityGodsend.class);

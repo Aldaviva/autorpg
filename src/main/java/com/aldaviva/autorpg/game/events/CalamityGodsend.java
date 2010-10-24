@@ -12,7 +12,6 @@ public abstract class CalamityGodsend extends RandomEvent {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CalamityGodsend.class);
 	
-	protected static List<String> descriptions;
 	protected static final String expAnnouncement = "${player}.experience ${operator} ${reward}";
 
 	private int reward;
@@ -21,6 +20,7 @@ public abstract class CalamityGodsend extends RandomEvent {
 	protected abstract int getRewardMultiplier();
 	protected abstract String getPrefix();
 	protected abstract String getOperator();
+	protected abstract List<String> getDescriptions();
 
 	protected void occur() {
 		try {
@@ -44,7 +44,7 @@ public abstract class CalamityGodsend extends RandomEvent {
 
 		.append(getPrefix()).append(": ")
 
-		.append(descriptions.get(getRandomInt(0, descriptions.size() - 1))).append(". ")
+		.append(getDescriptions().get(getRandomInt(0, getDescriptions().size() - 1))).append(". ")
 
 		.append(expAnnouncement).append(".");
 

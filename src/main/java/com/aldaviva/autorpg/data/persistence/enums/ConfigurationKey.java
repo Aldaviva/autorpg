@@ -21,7 +21,9 @@ public enum ConfigurationKey {
 	SERVER_URL("irc.aldaviva.com"),
 	PORT("6667"),
 	CHANNEL("#idlerpg"),
-	SUPPORT_CONTACT("ben@aldaviva.com");
+	SUPPORT_CONTACT("ben@aldaviva.com"),
+	TWITTER_USERNAME(""),
+	TWITTER_PASSWORD("");
 
 	
 	private static final Map<String, ConfigurationKey> stringMap = new HashMap<String, ConfigurationKey>();

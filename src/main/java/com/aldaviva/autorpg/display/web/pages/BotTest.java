@@ -1,9 +1,9 @@
-package com.aldaviva.autorpg.web.pages;
+package com.aldaviva.autorpg.display.web.pages;
 
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import com.aldaviva.autorpg.irc.Bot;
+import com.aldaviva.autorpg.display.irc.Bot;
 
 public class BotTest extends BasePage {
 

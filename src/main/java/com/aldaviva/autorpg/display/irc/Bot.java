@@ -1,4 +1,4 @@
-package com.aldaviva.autorpg.irc;
+package com.aldaviva.autorpg.display.irc;
 
 import java.io.IOException;
 
@@ -16,11 +16,13 @@ import com.aldaviva.autorpg.AutoRPGException;
 import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.display.Bulletin;
+import com.aldaviva.autorpg.display.BulletinHandler;
 import com.aldaviva.autorpg.game.PlayerManager;
 import com.aldaviva.autorpg.game.RandomEventManager;
 
 @Component
-public class Bot extends PircBot {
+public class Bot extends PircBot implements BulletinHandler {
 
 	@Autowired
 	private PlayerManager playerManager;
@@ -188,6 +190,11 @@ public class Bot extends PircBot {
 		} else {
 			LOGGER.debug(line);
 		}
+	}
+
+	@Override
+	public void handle(Bulletin bulletin) {
+		sendMessagesSplitByNewline(Configuration.getValue(ConfigurationKey.CHANNEL), bulletin.toString());
 	}
 
 }

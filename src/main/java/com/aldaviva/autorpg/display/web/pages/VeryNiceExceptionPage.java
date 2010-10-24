@@ -1,4 +1,4 @@
-package com.aldaviva.autorpg.web.pages;
+package com.aldaviva.autorpg.display.web.pages;
 
 public class VeryNiceExceptionPage extends BasePage {
 	public VeryNiceExceptionPage() {

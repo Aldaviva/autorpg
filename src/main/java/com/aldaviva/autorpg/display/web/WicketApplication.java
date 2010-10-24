@@ -1,10 +1,10 @@
-package com.aldaviva.autorpg.web;
+package com.aldaviva.autorpg.display.web;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 
-import com.aldaviva.autorpg.web.pages.HomePage;
-import com.aldaviva.autorpg.web.pages.VeryNiceExceptionPage;
+import com.aldaviva.autorpg.display.web.pages.HomePage;
+import com.aldaviva.autorpg.display.web.pages.VeryNiceExceptionPage;
 
 public class WicketApplication extends WebApplication {
 

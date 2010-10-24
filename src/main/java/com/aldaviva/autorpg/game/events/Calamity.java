@@ -11,7 +11,7 @@ public class Calamity extends CalamityGodsend {
 	private static String prefix = "Calamity";
 	private static String operator = "-=";
 
-	protected static final List<String> descriptions = new ArrayList<String>() {
+	private static final List<String> descriptions = new ArrayList<String>() {
 		private static final long serialVersionUID = 1L;
 		{
 			add("${player} has found something bad");
@@ -38,5 +38,10 @@ public class Calamity extends CalamityGodsend {
 	@Override
 	protected String getOperator() {
 		return operator;
+	}
+
+	@Override
+	protected List<String> getDescriptions() {
+		return descriptions;
 	}
 }

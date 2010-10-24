@@ -1,4 +1,4 @@
-package com.aldaviva.autorpg.web.pages;
+package com.aldaviva.autorpg.display.web.pages;
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;

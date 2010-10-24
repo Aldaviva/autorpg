@@ -1,4 +1,4 @@
-package com.aldaviva.autorpg.irc;
+package com.aldaviva.autorpg.display.irc;
 
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;

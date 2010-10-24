@@ -2,15 +2,20 @@ package com.aldaviva.autorpg.game.events;
 
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
+import com.aldaviva.autorpg.display.Bulletin;
+import com.aldaviva.autorpg.display.BulletinManager;
 import com.aldaviva.autorpg.game.GameState;
 
+@Configurable
 public abstract class RandomEvent {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(RandomEvent.class);
 	private static final int SECONDS_PER_DAY = 86400;
+	
+	@Autowired
+	protected BulletinManager bulletinManager;
 	
 	private Random prng = new Random();
 
@@ -24,13 +29,14 @@ public abstract class RandomEvent {
 		int rollsPerDay = SECONDS_PER_DAY / GameState.getTickInterval();
 		if (getRandomInt(1, rollsPerDay) <= getTimesPerDay()) {
 			occur();
-			LOGGER.info(getAnnouncement());
+			bulletinManager.publish(new Bulletin(getAnnouncement()));
 		}
 	}
 	
 	public final void forceOccur(){
 		occur();
-		LOGGER.info(getAnnouncement());
+		
+		bulletinManager.publish(new Bulletin(getAnnouncement()));
 	}
 
 	protected int getRandomInt(int lowerInclusive, int upperInclusive) {

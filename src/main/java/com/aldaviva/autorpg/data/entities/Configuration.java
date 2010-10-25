@@ -1,15 +1,20 @@
 package com.aldaviva.autorpg.data.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 
+import com.aldaviva.autorpg.RehashListener;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
 
 @RooJavaBean
@@ -34,7 +39,16 @@ public class Configuration {
     }
     
     public static String getValue(ConfigurationKey key){
-    	return Configuration.findConfiguration(key).getValue();
+    	Configuration configuration = Configuration.findConfiguration(key);
+    	
+    	if(configuration == null){
+    		configuration = new Configuration();
+    		configuration.setKey(key);
+    		configuration.setToDefaultValue();
+    		configuration.persist();
+    	}
+    	
+    	return configuration.getValue();
     }
     
     public void setToDefaultValue(){
@@ -47,5 +61,21 @@ public class Configuration {
     	if(value == null){
     		setToDefaultValue();
     	}
+    }
+    
+    @Transient
+    private static List<RehashListener> rehashListeners = new ArrayList<RehashListener>();
+    
+    public static void addRehashListener(RehashListener rehashlistener){
+    	rehashListeners.add(rehashlistener);
+    }
+    
+    public void setValue(String value) {
+        this.value = value;
+        
+        
+        for (RehashListener rehashListener : rehashListeners) {
+			rehashListener.rehash();
+		}
     }
 }

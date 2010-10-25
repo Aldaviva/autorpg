@@ -3,18 +3,21 @@ package com.aldaviva.autorpg.data.entities;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.persistence.CascadeType;
+
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
+
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
+
 import com.aldaviva.autorpg.data.persistence.enums.ItemArticle;
 import com.aldaviva.autorpg.data.persistence.enums.ItemSlot;
 
@@ -34,7 +37,7 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemSlot slot;
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "items")
+    @ManyToMany(mappedBy = "items", fetch = FetchType.EAGER)
     private Set<com.aldaviva.autorpg.data.entities.Character> characters = new HashSet<com.aldaviva.autorpg.data.entities.Character>();
 
     @Enumerated(EnumType.STRING)

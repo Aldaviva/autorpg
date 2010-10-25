@@ -24,14 +24,14 @@ public abstract class CalamityGodsend extends RandomEvent {
 
 	protected void occur() {
 		try {
-			Character character = Character.findOnlinePlayersByRandom(1).get(0);
+			target = Character.findOnlinePlayersByRandom(1).get(0);
 	
-			int exp = character.getExperience();
+			int exp = target.getExperience();
 			reward = getRewardMultiplier() * getRandomInt((int) 0.02 * exp, (int) 0.05 * exp);
 	
-			character.setExperience(character.getExperience() + reward);
+			target.setExperience(target.getExperience() + reward);
 	
-			character.merge();
+			target.merge();
 		
 		} catch(NotEnoughPlayersError e) {
 			LOGGER.info("Not enough players for this Random Event to occur.");

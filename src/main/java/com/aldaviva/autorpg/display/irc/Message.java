@@ -13,8 +13,9 @@ public enum Message {
 	WRONG_PASSWORD_SUGGESTION("If you have forgotten your password, contact the administrative team at ${adminEmail}."),
 	MULTIPLE_CHARACTERS_SUGGESTION("To create more characters for your player, use "+botQuery("create", "name", "class")+" multiple times."),
 	LOGIN_REQUIRED("To register as a new player, use "+botQuery("register", "yourName", "password")+". To log in as an existing player, use "+botQuery("login", "user", "password")),
-	CONFIG_SET(Colors.BOLD+"${type}"+Colors.NORMAL+" = "+Colors.BOLD+"${value}"),
-	CONFIG_GET(Colors.BOLD+"${type}"+Colors.NORMAL+" == "+Colors.BOLD+"${value}");
+	CONFIG_SET(Colors.BOLD+"${type}"+Colors.NORMAL+" = ${value}"),
+	CONFIG_GET(Colors.BOLD+"${type}"+Colors.NORMAL+" == ${value}"),
+	CONFIGURATION_INCOMPLETE_HINT("Try setting this configuration using "+botQuery("CONFIG", "${configurationKey}", "value"));
 	
 	private String message;
 	

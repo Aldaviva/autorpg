@@ -35,7 +35,6 @@ public abstract class RandomEvent {
 	
 	public final void forceOccur(){
 		occur();
-		
 		bulletinManager.publish(new Bulletin(getAnnouncement()));
 	}
 

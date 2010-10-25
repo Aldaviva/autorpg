@@ -4,9 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.aldaviva.autorpg.data.entities.Configuration;
-import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
-
 public class GameState {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GameState.class);
@@ -26,10 +23,10 @@ public class GameState {
 	public void init(){
 		LOGGER.info("Initializing Game State.");
 		
-		setUpDefaults();
+		//setUpDefaults();
 	}
 	
-	private void setUpDefaults() {
+	/*private void setUpDefaults() {
 		for (ConfigurationKey key: ConfigurationKey.values()){
 			if(Configuration.findConfiguration(key) == null){
 				Configuration config = new Configuration();
@@ -38,7 +35,7 @@ public class GameState {
 				config.persist();
 			}
 		}
-	}
+	}*/
 
 	public static Integer getTickInterval() {
 		return tickInterval;

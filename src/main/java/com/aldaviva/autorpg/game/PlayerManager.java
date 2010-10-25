@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.aldaviva.autorpg.AutoRPGException.DuplicatePlayerError;
+import com.aldaviva.autorpg.AutoRPGException.LoginFailedBadPasswordError;
 import com.aldaviva.autorpg.AutoRPGException.LoginFailedNoSuchPlayerError;
 import com.aldaviva.autorpg.AutoRPGException.MustRegisterToCreateAvatarError;
 import com.aldaviva.autorpg.data.entities.Character;
@@ -18,7 +19,7 @@ public class PlayerManager {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PlayerManager.class);
 
-	public Player login(String playerName, String plainPassword, String userhost) throws LoginFailedNoSuchPlayerError{
+	public Player login(String playerName, String plainPassword, String userhost) throws LoginFailedNoSuchPlayerError, LoginFailedBadPasswordError{
 		Player player = Player.findPlayer(playerName);
 		if(player != null){
 			player.setOnline(true);

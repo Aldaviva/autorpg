@@ -1,11 +1,14 @@
 package com.aldaviva.autorpg;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.display.irc.IrcPlayerAction;
 import com.aldaviva.autorpg.display.irc.Message;
-import com.aldaviva.autorpg.display.irc.PlayerAction;
 
 public abstract class AutoRPGException extends Exception {
 
@@ -19,6 +22,11 @@ public abstract class AutoRPGException extends Exception {
 		this.suggestion = suggestion;
 	}
 	
+	@Override
+	public String getMessage() {
+		return getProblem()+" "+getSuggestion();
+	}
+
 	public String getProblem() {
 		return problem;
 	}
@@ -72,14 +80,14 @@ public abstract class AutoRPGException extends Exception {
 	
 	public static class TooFewArgumentsError extends StupidUserError {
 		private static final long serialVersionUID = 1L;
-		private PlayerAction action;
-		public TooFewArgumentsError(PlayerAction action){
+		private IrcPlayerAction action;
+		public TooFewArgumentsError(IrcPlayerAction action){
 			super("Usage:", null);
 			this.action = action;
 		}
 		@Override
 		public String getSuggestion() {
-			return action.getUsage().render();
+			return action.usage();
 		}
 	}
 	
@@ -90,27 +98,15 @@ public abstract class AutoRPGException extends Exception {
 		}
 		@Override
 		public String getSuggestion() {
-			StringBuilder str = new StringBuilder("Available action are ");
+			List<String> actionNamesNoCheats = new ArrayList<String>();
 			
-			List<PlayerAction> actions = PlayerAction.valuesWithoutCheats();
-			
-			int length = actions.size();
-			
-			for (int i = 0; i < length; i++) {
-				PlayerAction action = actions.get(i);
-				if(i>0){
-					str.append(", ");
-				}
-				if(i == length - 1){
-					str.append("and ");
-				}
-				str.append(action.toString());
-				if(i == length - 1){
-					str.append(".");
+			for (IrcPlayerAction action : IrcPlayerAction.values()) {
+				if(!action.isCheat()){
+					actionNamesNoCheats.add(action.getCommand());
 				}
 			}
 			
-			return str.toString();
+			return "Available actions: "+StringUtils.join(actionNamesNoCheats, ", ");
 		}
 	}
 	
@@ -118,6 +114,13 @@ public abstract class AutoRPGException extends Exception {
 		private static final long serialVersionUID = 1L;
 		public NotEnoughPlayersError() {
 			super("Not enough players.", "Don't run this event.");
+		}
+	}
+	
+	public static class ConfigurationIncompleteError extends AutoRPGException {
+		private static final long serialVersionUID = 1L;
+		public ConfigurationIncompleteError(ConfigurationKey key) {
+			super("Configuration for "+key.name()+" is incomplete.", Message.CONFIGURATION_INCOMPLETE_HINT.fillIn("configurationKey", key.name()));
 		}
 	}
 }

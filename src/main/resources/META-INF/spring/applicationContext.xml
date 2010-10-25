@@ -110,6 +110,6 @@
 	
 	<!-- WICKET -->
 	
-	<bean id="wicketApplication" class="com.aldaviva.autorpg.web.WicketApplication" init-method="" />
+	<bean id="wicketApplication" class="com.aldaviva.autorpg.display.web.WicketApplication" init-method="" />
 	
 </beans>

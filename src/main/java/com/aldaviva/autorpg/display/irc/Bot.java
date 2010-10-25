@@ -4,31 +4,22 @@ import java.io.IOException;
 
 import javax.annotation.PreDestroy;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jibble.pircbot.IrcException;
 import org.jibble.pircbot.NickAlreadyInUseException;
 import org.jibble.pircbot.PircBot;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aldaviva.autorpg.AutoRPGException;
-import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.Bulletin;
 import com.aldaviva.autorpg.display.BulletinHandler;
-import com.aldaviva.autorpg.game.PlayerManager;
-import com.aldaviva.autorpg.game.RandomEventManager;
 
 @Component
 public class Bot extends PircBot implements BulletinHandler {
-
-	@Autowired
-	private PlayerManager playerManager;
-
-	@Autowired
-	private RandomEventManager randomEventManager;
 
 	private static final Logger LOGGER = org.apache.log4j.Logger.getLogger(Bot.class);
 
@@ -56,94 +47,105 @@ public class Bot extends PircBot implements BulletinHandler {
 	@Override
 	@Transactional
 	protected void onPrivateMessage(String sender, String login, String hostname, String message) {
-		String[] argv = message.split("\\s");
-		String argExceptFirst = "";
+		String[] argv = StringUtils.split(message);
+		String argsExceptFirst = "";
 		if (argv.length > 1) {
-			argExceptFirst = message.split("\\s", 2)[1];
+			argsExceptFirst = StringUtils.split(message, null, 2)[1];
 		}
+		
 		String userhost = sender + '@' + hostname;
-		PlayerAction action = PlayerAction.getByName(argv[0]);
+		IrcPlayerAction action = IrcPlayerAction.getByName(argv[0]);
 
 		try {
-
 			if (action == null) {
-
 				throw new AutoRPGException.UnknownActionError();
-
+			} else if (argv.length - 1 < action.getNumberOfRequiredArguments()) {
+				throw new AutoRPGException.TooFewArgumentsError(action);
 			} else {
-
-				String playerName, password, characterName, designation, value;
-				Character character;
-				ConfigurationKey configurationKey;
-
-				if (action.getUsage() != null && argv.length - 1 != action.getUsage().getNumberOfArguments()) {
-					throw new AutoRPGException.TooFewArgumentsError(action);
-				}
-
-				switch (action) {
-				case LOGIN:
-					playerName = argv[1];
-					password = argExceptFirst;
-					playerManager.login(playerName, password, userhost);
-					break;
-
-				case LOGOUT:
-					playerManager.logout(userhost);
-					break;
-
-				case REGISTER:
-					playerName = argv[1];
-					password = argExceptFirst;
-					playerManager.register(userhost, playerName, password);
-					sendMessage(sender, Message.REGISTERED_SUCCESS.fillIn("playerName", playerName));
-					sendMessage(sender, Message.CREATE_HINT.fillIn("botNickname", Configuration.getValue(ConfigurationKey.BOT_NICKNAME)));
-					break;
-
-				case CREATE:
-					characterName = argv[1];
-					designation = argExceptFirst;
-					character = playerManager.createCharacter(userhost, characterName, designation);
-					sendMessage(sender, Message.CREATED_AVATAR.fillIn("name", character.getName(), "class", character.getDesignation()));
-					break;
-
-				case CONFIG:
-					configurationKey = ConfigurationKey.getByName(argv[1]);
-					if (argv.length == 1) {
-						value = Configuration.getValue(configurationKey);
-						sendMessage(sender, Message.CONFIG_GET.fillIn("type", configurationKey.name(), "value", value));
-					} else {
-						value = argExceptFirst;
-						Configuration.findConfiguration(configurationKey).setValue(value);
-						sendMessage(sender, Message.CONFIG_SET.fillIn("type", configurationKey.name(), "value", value));
-					}
-					break;
-					
-				case CHARACTER:
-					characterName = argv[1];
-					character = Character.findCharacter(characterName);
-					if(character != null){
-						sendMessagesSplitByNewline(sender, character.toString());
-					} else {
-						throw new AutoRPGException.NoSuchCharacterError();
-					}
-					break;
-					
-				case FINDITEM:
-					randomEventManager.force(2);
-					break;
-
-				default:
-					sendMessage(sender, "Unimplemented.");
-					break;
-
-				}
+				sendMessagesSplitByNewline(sender, action.perform(sender, userhost, argv, argsExceptFirst));
 			}
+			
 		} catch (AutoRPGException e) {
-			sendMessagesSplitByNewline(sender, e.getProblem() + " " + e.getSuggestion());
+			sendMessagesSplitByNewline(sender, e.getMessage());
 		} catch (Exception e){
 			e.printStackTrace(System.err);
 		}
 	}
+
+	/*private void handleAction(IrcPlayerAction action, String sender, String userhost, String[] argv, String argExceptFirst) throws AutoRPGException {
+		if (action == null) {
+
+			throw new AutoRPGException.UnknownActionError();
+
+		} else {
+
+			String playerName, password, characterName, designation, value;
+			Character character;
+			ConfigurationKey configurationKey;
+
+			if (argv.length - 1 != action.getNumberOfArguments()) {
+				throw new AutoRPGException.TooFewArgumentsError(action);
+			}
+
+			switch (action) {
+			case LOGIN:
+				playerName = argv[1];
+				password = argExceptFirst;
+				playerManager.login(playerName, password, userhost);
+				break;
+
+			case LOGOUT:
+				playerManager.logout(userhost);
+				break;
+
+			case REGISTER:
+				playerName = argv[1];
+				password = argExceptFirst;
+				playerManager.register(userhost, playerName, password);
+				sendMessage(sender, Message.REGISTERED_SUCCESS.fillIn("playerName", playerName));
+				sendMessage(sender, Message.CREATE_HINT.fillIn("botNickname", Configuration.getValue(ConfigurationKey.BOT_NICKNAME)));
+				break;
+
+			case CREATE:
+				characterName = argv[1];
+				designation = argExceptFirst;
+				character = playerManager.createCharacter(userhost, characterName, designation);
+				sendMessage(sender, Message.CREATED_AVATAR.fillIn("name", character.getName(), "class", character.getDesignation()));
+				break;
+
+			case CONFIG:
+				configurationKey = ConfigurationKey.getByName(argv[1]);
+				if (argv.length == 1) {
+					value = Configuration.getValue(configurationKey);
+					sendMessage(sender, Message.CONFIG_GET.fillIn("type", configurationKey.name(), "value", value));
+				} else {
+					value = argExceptFirst;
+					Configuration.findConfiguration(configurationKey).setValue(value);
+					sendMessage(sender, Message.CONFIG_SET.fillIn("type", configurationKey.name(), "value", value));
+				}
+				break;
+				
+			case CHARACTER:
+				characterName = argv[1];
+				character = Character.findCharacter(characterName);
+				if(character != null){
+					sendMessagesSplitByNewline(sender, character.toString());
+				} else {
+					throw new AutoRPGException.NoSuchCharacterError();
+				}
+				break;
+				
+			case FINDITEM:
+				randomEventManager.force(2);
+				break;
+
+			default:
+				sendMessage(sender, "Unimplemented.");
+				break;
+
+			}
+		}
+	}*/
 	
 	@Override
 	protected void onJoin(String channel, String sender, String login, String hostname) {

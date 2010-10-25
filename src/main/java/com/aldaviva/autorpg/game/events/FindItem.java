@@ -2,13 +2,12 @@ package com.aldaviva.autorpg.game.events;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aldaviva.autorpg.AutoRPGException.NotEnoughPlayersError;
 import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.data.entities.Item;
-import com.aldaviva.autorpg.display.BulletinManager;
 import com.aldaviva.autorpg.game.CharacterItemManager;
 
 @Configurable
@@ -34,13 +33,12 @@ public class FindItem extends RandomEvent {
 		return Item.findItemByRandom();
 	}
 
+	@Transactional
 	@Override
 	protected void occur() {
 		try {
 			character = Character.findOnlinePlayersByRandom(1).get(0);
 			newItem = getRandomItem();
-			
-			//onFindItem(character, newItem);
 			
 			characterItemManager.offerCharacterAnItem(newItem, character);
 			

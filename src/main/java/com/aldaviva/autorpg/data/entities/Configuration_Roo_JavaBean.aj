@@ -11,8 +11,4 @@ privileged aspect Configuration_Roo_JavaBean {
         return this.value;
     }
     
-    public void Configuration.setValue(String value) {
-        this.value = value;
-    }
-    
 }

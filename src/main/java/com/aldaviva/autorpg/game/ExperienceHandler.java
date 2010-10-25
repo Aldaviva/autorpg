@@ -17,7 +17,7 @@ class ExperienceHandler implements CharacterProgressHandler {
 
 		character.setExperience(experience);
 
-		LOGGER.info(character.getName() + " has " + character.getExperience() + " experience.");
+		LOGGER.debug(character.getName() + " has " + character.getExperience() + " experience.");
 
 		int level = calculateLevelFromExperience(character);
 		if (level != character.getLevel()) {

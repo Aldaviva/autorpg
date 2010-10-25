@@ -23,6 +23,6 @@ class WanderHandler implements CharacterProgressHandler {
 		}
 		MapPoint destination = worldMap.getDestination(origin, RealmMap.MovementDirection.getRandomDirection());
 		character.setLocation(destination);
-		LOGGER.info(character.getName() + " has walked to " + destination.x + ", " + destination.y);
+		LOGGER.debug(character.getName() + " has walked to " + destination.x + ", " + destination.y);
 	}
 }

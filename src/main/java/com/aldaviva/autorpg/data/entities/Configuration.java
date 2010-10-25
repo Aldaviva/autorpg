@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aldaviva.autorpg.RehashListener;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
@@ -38,6 +39,7 @@ public class Configuration {
         this.key = key;
     }
     
+    @Transactional
     public static String getValue(ConfigurationKey key){
     	Configuration configuration = Configuration.findConfiguration(key);
     	
@@ -46,6 +48,7 @@ public class Configuration {
     		configuration.setKey(key);
     		configuration.setToDefaultValue();
     		configuration.persist();
+    		rehash();
     	}
     	
     	return configuration.getValue();
@@ -70,12 +73,15 @@ public class Configuration {
     	rehashListeners.add(rehashlistener);
     }
     
+    private static void rehash(){
+    	 for (RehashListener rehashListener : rehashListeners) {
+ 			rehashListener.rehash();
+ 		}
+    }
+    
     public void setValue(String value) {
         this.value = value;
         
-        
-        for (RehashListener rehashListener : rehashListeners) {
-			rehashListener.rehash();
-		}
+        rehash();
     }
 }

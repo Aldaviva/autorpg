@@ -22,6 +22,7 @@ public enum ConfigurationKey {
 	PORT("6667"),
 	CHANNEL("#idlerpg"),
 	SUPPORT_CONTACT("ben@aldaviva.com"),
+	TWITTER_ENABLED("false"),
 	TWITTER_OAUTH_TOKEN(""),
 	TWITTER_OAUTH_TOKEN_SECRET(""),
 	TWITTER_CONSUMER_KEY(""),

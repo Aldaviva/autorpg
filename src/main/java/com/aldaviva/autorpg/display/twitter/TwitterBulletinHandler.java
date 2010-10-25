@@ -22,6 +22,7 @@ public class TwitterBulletinHandler implements BulletinHandler, RehashListener {
 	private Twitter twitter;
 
 	public TwitterBulletinHandler() throws ConfigurationIncompleteError {
+		Configuration.addRehashListener(this);
 		init();
 	}
 	
@@ -41,11 +42,13 @@ public class TwitterBulletinHandler implements BulletinHandler, RehashListener {
 
 	@Override
 	public void handle(Bulletin bulletin) {
-		try {
-			twitter.updateStatus(bulletin.toString());
-			LOGGER.debug("Updating status to \"" + bulletin.toString() + "\".");
-		} catch (TwitterException e) {
-			LOGGER.error(e.getMessage());
+		if(Boolean.parseBoolean(Configuration.getValue(ConfigurationKey.TWITTER_ENABLED))){
+			try {
+				twitter.updateStatus(bulletin.toString());
+				LOGGER.debug("Updating status to \"" + bulletin.toString() + "\".");
+			} catch (TwitterException e) {
+				LOGGER.error(e.getMessage());
+			}
 		}
 	}
 

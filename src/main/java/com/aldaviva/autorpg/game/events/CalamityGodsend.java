@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aldaviva.autorpg.AutoRPGException.NotEnoughPlayersError;
 import com.aldaviva.autorpg.data.entities.Character;
@@ -22,12 +23,13 @@ public abstract class CalamityGodsend extends RandomEvent {
 	protected abstract String getOperator();
 	protected abstract List<String> getDescriptions();
 
+	@Transactional
 	protected void occur() {
 		try {
 			target = Character.findOnlinePlayersByRandom(1).get(0);
 	
 			int exp = target.getExperience();
-			reward = getRewardMultiplier() * getRandomInt((int) 0.02 * exp, (int) 0.05 * exp);
+			reward = getRewardMultiplier() * getRandomInt((int) (0.02 * exp), (int) (0.05 * exp));
 	
 			target.setExperience(target.getExperience() + reward);
 	

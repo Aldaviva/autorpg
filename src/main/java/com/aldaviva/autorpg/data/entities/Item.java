@@ -4,11 +4,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.TypedQuery;
@@ -37,7 +37,8 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemSlot slot;
 
-    @ManyToMany(mappedBy = "items", fetch = FetchType.EAGER)
+//    @ManyToMany(mappedBy = "items", fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "items")
     private Set<com.aldaviva.autorpg.data.entities.Character> characters = new HashSet<com.aldaviva.autorpg.data.entities.Character>();
 
     @Enumerated(EnumType.STRING)

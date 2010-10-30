@@ -56,7 +56,7 @@ public class Player {
         return q.getResultList();
     }
 
-    public static Player findByOnlineUserhost(String userhost) {
+    public static Player findByOnlineAndUserhost(String userhost) {
         Player player = findByUserhost(userhost);
         if (player != null && player.getOnline()) {
             return player;

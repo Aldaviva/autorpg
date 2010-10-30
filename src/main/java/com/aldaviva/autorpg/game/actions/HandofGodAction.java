@@ -15,7 +15,7 @@ public class HandofGodAction implements PlayerAction {
 
 	@Override
 	public String perform(String sender, String userhost, String[] argv, String argsExceptFirst) throws AutoRPGException {
-		Player player = Player.findByOnlineUserhost(userhost);
+		Player player = Player.findByOnlineAndUserhost(userhost);
 		if(player != null && player.getSuperuser()){
 			
 			randomEventManager.force(0);

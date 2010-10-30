@@ -1,11 +1,12 @@
 package com.aldaviva.autorpg.game;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,19 +14,26 @@ import com.aldaviva.autorpg.AutoRPGException.DuplicatePlayerError;
 import com.aldaviva.autorpg.AutoRPGException.LoginFailedBadPasswordError;
 import com.aldaviva.autorpg.AutoRPGException.LoginFailedNoSuchPlayerError;
 import com.aldaviva.autorpg.AutoRPGException.MustRegisterToCreateAvatarError;
+import com.aldaviva.autorpg.Utils;
 import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.data.entities.Player;
 import com.aldaviva.autorpg.data.persistence.types.MapPoint;
+import com.aldaviva.autorpg.display.bulletin.Bulletin;
+import com.aldaviva.autorpg.display.bulletin.BulletinManager;
+import com.aldaviva.autorpg.game.actions.LoginAction;
 
 @Component
 public class PlayerManager {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PlayerManager.class);
+	
+	@Autowired
+	private BulletinManager bulletinManager;
 
 	public Player login(String playerName, String plainPassword, String userhost) throws LoginFailedNoSuchPlayerError, LoginFailedBadPasswordError{
 		Player player = Player.findPlayer(playerName);
 		if(player != null){
-			String providedHashedPassword = hash(player.getName()+plainPassword);
+			String providedHashedPassword = Utils.hash(player.getName()+plainPassword);
 			if(player.getPassword().equals(providedHashedPassword)){
 				player.setOnline(true);
 				player.setUserhost(userhost);
@@ -41,7 +49,7 @@ public class PlayerManager {
 	}
 	
 	public boolean logout(String userhost){
-		Player player = Player.findByOnlineUserhost(userhost);
+		Player player = Player.findByOnlineAndUserhost(userhost);
 		if(player != null){
 			player.setOnline(false);
 			LOGGER.info(player.getName() + " has logged off.");
@@ -60,7 +68,7 @@ public class PlayerManager {
 		player.setName(playerName);
 		player.setOnline(true);
 		
-		String hashedPassword = hash(playerName+password);
+		String hashedPassword = Utils.hash(playerName+password);
 		player.setPassword(hashedPassword);
 		
 		player.persist();
@@ -89,21 +97,19 @@ public class PlayerManager {
 		}
 	}
 	
-	public static String hash(String plain){
-		return DigestUtils.sha256Hex(plain);
-	}
-	
 	@Transactional
 	public void enforcePlayersOnlineState(List<String> userhostsInChannel){
 		LOGGER.info("Enforcing Players' online state.");
 		
 		List<Player> playersToSetOffline = Player.findByOnline();
+		List<Character> charactersStillOnline = new ArrayList<Character>();
 		
 		for (String userhost : userhostsInChannel) {
-			Player currentlyOnlinePlayer = Player.findByOnlineUserhost(userhost);
+			Player currentlyOnlinePlayer = Player.findByOnlineAndUserhost(userhost);
 			if(currentlyOnlinePlayer != null){
 				LOGGER.info(currentlyOnlinePlayer.getName() + " automatically set to online after bot reconnection.");
 				playersToSetOffline.remove(currentlyOnlinePlayer);
+				charactersStillOnline.addAll(Character.findCharactersByPlayer(currentlyOnlinePlayer).getResultList());
 			}
 		}
 		
@@ -111,6 +117,12 @@ public class PlayerManager {
 			LOGGER.info(player.getName() + " set to offline after bot reconnection.");
 			player.setOnline(false);
 		}
+		
+		if(!charactersStillOnline.isEmpty()){
+			Bulletin rejoinedBulletin = LoginAction.createCharactersRejoinedBulletin(charactersStillOnline);
+			bulletinManager.publish(rejoinedBulletin);
+		}
+		
 	}
 	
 }

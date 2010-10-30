@@ -25,7 +25,7 @@ public class ProgressUpdater {
 	private final List<CharacterProgressHandler> avatarProgressHandlers = new ArrayList<CharacterProgressHandler>();
 	
 	public void init(){
-		LOGGER.info("Initializing Progress Updater.");
+		LOGGER.debug("Initializing Progress Updater.");
 		
 		avatarProgressHandlers.add(new ExperienceHandler());
 		avatarProgressHandlers.add(new WanderHandler(worldMap));

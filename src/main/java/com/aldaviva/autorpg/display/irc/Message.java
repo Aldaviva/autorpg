@@ -10,6 +10,7 @@ public enum Message {
 	CREATED_AVATAR("${name}, the Level 1 ${class}, has joined the realm."),
 	LOGIN_FAILED_NO_SUCH_USER_SUGGESTION("Try creating the user account with "+botQuery("create", "name", "password")+"."),
 	NO_SUCH_CHARACTER_SUGGESTION("Check the list of characters using "+botQuery("list", "characters")+"."),
+	WRONG_PASSWORD("YOU DIDN'T SAY THE MAGIC WORD!!!"),
 	WRONG_PASSWORD_SUGGESTION("If you have forgotten your password, contact the administrative team at ${adminEmail}."),
 	MULTIPLE_CHARACTERS_SUGGESTION("To create more characters for your player, use "+botQuery("create", "name", "class")+" multiple times."),
 	LOGIN_REQUIRED("To register as a new player, use "+botQuery("register", "yourName", "password")+". To log in as an existing player, use "+botQuery("login", "user", "password")),

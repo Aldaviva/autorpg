@@ -15,7 +15,7 @@ public class CharacterItemManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterItemManager.class);
 	
 	public void init(){
-		LOGGER.info("Initializing Character Item Manager.");
+		LOGGER.debug("Initializing Character Item Manager.");
 	}
 	
 	public void offerCharacterAnItem(Item newItem, Character character){
@@ -31,21 +31,27 @@ public class CharacterItemManager {
 	}
 	
 	private Item itemToDiscard(Character character, Item newItem) {
-		List<Item> existingItems = Item.findItemsByCharacterAndSlot(character, newItem.getSlot());
+		List<Item> existingItems = Item.findByCharacterAndSlot(character, newItem.getSlot());
 		if (existingItems.size() < newItem.getSlot().getSlotsPerCharacter()) {
 			return null;
 		}
 
-		Item shortestNameItem = newItem;
+		Item worstItem = newItem;
 
 		for (int i = 0; i < existingItems.size(); i++) {
 			Item existingItem = existingItems.get(i);
-			if (existingItem.getName().length() < shortestNameItem.getName().length()) {
-				shortestNameItem = existingItem;
-			}
+			worstItem = decideWorseItem(existingItem, worstItem);
 		}
 
-		return shortestNameItem;
+		return worstItem;
+	}
+	
+	private Item decideWorseItem(Item item1, Item item2){
+		if(item1.getLevel() > item2.getLevel()){
+			return item2;
+		} else {
+			return item1;
+		}
 	}
 
 	private void addItemToCharacter(Character character, Item item) {

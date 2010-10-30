@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aldaviva.autorpg.AutoRPGException;
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
-import com.aldaviva.autorpg.display.Bulletin;
-import com.aldaviva.autorpg.display.BulletinHandler;
+import com.aldaviva.autorpg.display.bulletin.Bulletin;
+import com.aldaviva.autorpg.display.bulletin.BulletinHandler;
 import com.aldaviva.autorpg.game.PlayerManager;
 
 @Component
@@ -38,7 +38,7 @@ public class Bot extends PircBot implements BulletinHandler {
 	/* Public methods */
 
 	public void init() {
-		LOGGER.info("Initializing Bot.");
+		LOGGER.debug("Initializing Bot.");
 		setVerbose(true);
 		setMessageDelay(250);
 		setAutoNickChange(true);
@@ -51,6 +51,7 @@ public class Bot extends PircBot implements BulletinHandler {
 
 	@PreDestroy
 	public void stop() {
+		LOGGER.info("Shutting down.");
 		quitServer("Shutdown requested.");
 		dispose();
 	}
@@ -61,11 +62,7 @@ public class Bot extends PircBot implements BulletinHandler {
 	@Transactional
 	protected void onPrivateMessage(String sender, String login, String hostname, String message) {
 		String[] argv = StringUtils.split(message);
-		//String argsExceptCommand = "";
 		String argsExceptFirstArg = "";
-		/*if (argv.length > 1) {
-			argsExceptCommand = StringUtils.split(message, null, 2)[1];
-		}*/
 		if(argv.length > 2){
 			argsExceptFirstArg = StringUtils.split(message, null, 3)[2];
 		}
@@ -92,7 +89,7 @@ public class Bot extends PircBot implements BulletinHandler {
 
 	@Override
 	protected void onConnect() {
-		LOGGER.info("Connected to IRC server.");
+		LOGGER.info("Connected.");
 	}
 	
 	@Override
@@ -140,7 +137,7 @@ public class Bot extends PircBot implements BulletinHandler {
 		Integer port = Integer.valueOf(Configuration.getValue(ConfigurationKey.PORT));
 		String channel = Configuration.getValue(ConfigurationKey.CHANNEL);
 		String nickname = Configuration.getValue(ConfigurationKey.BOT_NICKNAME);
-		LOGGER.info("Connecting to irc://"+serverUrl+":"+port+"/"+channel+" as "+nickname);
+		LOGGER.info("Connecting to irc://"+serverUrl+":"+port+"/"+channel+" as "+nickname+"...");
 		
 		try {
 			setName(nickname);

@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aldaviva.autorpg.AutoRPGException.NotEnoughPlayersError;
+import com.aldaviva.autorpg.Utils;
 import com.aldaviva.autorpg.data.entities.Character;
+import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.entities.Item;
+import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
 import com.aldaviva.autorpg.game.CharacterItemManager;
 
 @Configurable
@@ -26,11 +29,13 @@ public class FindItemEvent extends RandomEvent {
 	
 	@Override
 	public int getTimesPerDay() {
-		return 16;
+		return (int) (Character.countCharacters() * Integer.parseInt(Configuration.getValue(ConfigurationKey.ITEMS_PER_CHARACTER_PER_DAY)));
 	}
 	
 	protected Item getRandomItem(){
-		return Item.findItemByRandom();
+		int normalItemsPerRare = Integer.parseInt(Configuration.getValue(ConfigurationKey.NORMAL_ITEMS_PER_RARE));
+		boolean findRare = (1 == Utils.getRandomInt(1, normalItemsPerRare)); 
+		return Item.findRandomByRarity(findRare);
 	}
 
 	@Transactional

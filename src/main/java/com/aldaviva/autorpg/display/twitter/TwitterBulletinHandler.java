@@ -12,8 +12,8 @@ import com.aldaviva.autorpg.RehashListener;
 import com.aldaviva.autorpg.AutoRPGException.ConfigurationIncompleteError;
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
-import com.aldaviva.autorpg.display.Bulletin;
-import com.aldaviva.autorpg.display.BulletinHandler;
+import com.aldaviva.autorpg.display.bulletin.Bulletin;
+import com.aldaviva.autorpg.display.bulletin.BulletinHandler;
 
 public class TwitterBulletinHandler implements BulletinHandler, RehashListener {
 

@@ -43,6 +43,9 @@ public class Item {
 
     @Enumerated(EnumType.STRING)
     private ItemArticle article;
+    
+    @NotNull
+    private Integer level;
 
     public String getName() {
         return name;
@@ -52,14 +55,14 @@ public class Item {
         this.name = name;
     }
 
-    public static Item findItemByRandom() {
+    public static Item findRandom() {
         EntityManager em = entityManager();
         TypedQuery<Item> q = em.createQuery("SELECT Item FROM Item AS item ORDER BY random()", Item.class);
         q.setMaxResults(1);
         return q.getSingleResult();
     }
 
-    public static Item findItemByRandomUnique(boolean unique) {
+    public static Item findRandomByRarity(boolean unique) {
         EntityManager em = entityManager();
         TypedQuery<Item> q = em.createQuery("SELECT Item FROM Item AS item WHERE item.rare = :rare ORDER BY random()", Item.class);
         q.setMaxResults(1);
@@ -67,7 +70,7 @@ public class Item {
         return q.getSingleResult();
     }
 
-    public static List<Item> findItemsByCharacterAndSlot(Character character, ItemSlot slot) {
+    public static List<Item> findByCharacterAndSlot(Character character, ItemSlot slot) {
         if (character == null) throw new IllegalArgumentException("The character argument is required");
         if (slot == null) throw new IllegalArgumentException("The slot argument is required");
         EntityManager em = entityManager();

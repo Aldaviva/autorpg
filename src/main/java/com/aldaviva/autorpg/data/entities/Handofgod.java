@@ -10,8 +10,8 @@ import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 
+import com.aldaviva.autorpg.Utils;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
-import com.aldaviva.autorpg.game.events.RandomEvent;
 
 @RooJavaBean
 @RooToString
@@ -29,7 +29,7 @@ public class Handofgod {
     public int getReward(int experience){
     	double max_mult = Double.parseDouble(Configuration.getValue(ConfigurationKey.HAND_OF_GOD_EXP_MULTIPLIER_MAX));
     	double min_mult = Double.parseDouble(Configuration.getValue(ConfigurationKey.HAND_OF_GOD_EXP_MULTIPLIER_MIN));
-    	return (beneficial ? 1 : -1) * RandomEvent.getRandomInt((int) (min_mult * experience), (int) (max_mult* experience));
+    	return (beneficial ? 1 : -1) * Utils.getRandomInt((int) (min_mult * experience), (int) (max_mult* experience));
     }
 
     public static Handofgod findRandom() {

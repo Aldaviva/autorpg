@@ -1,4 +1,4 @@
-package com.aldaviva.autorpg.display;
+package com.aldaviva.autorpg.display.bulletin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class BulletinManager {
 	private Bot bot;
 	
 	public void init(){
-		LOGGER.info("Initializing Bulletin Manager");
+		LOGGER.debug("Initializing Bulletin Manager");
 		try {
 			
 			bulletinHandlers.add(new LoggerBulletinHandler());

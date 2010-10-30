@@ -16,7 +16,7 @@ public class RealmMap {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RealmMap.class);
 	
 	public void init(){
-		LOGGER.info("Initializing World Map.");
+		LOGGER.debug("Initializing World Map.");
 	}
 	
 	public MapPoint getDestination(MapPoint origin, MovementDirection movement) {

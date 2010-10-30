@@ -27,11 +27,9 @@ public class GameState {
 
 
 	public void init(){
-		LOGGER.info("Initializing Game State.");
+		LOGGER.debug("Initializing Game State.");
 		
 		setUpDefaults();
-		
-		checkConfiguration();
 	}
 	
 	@Transactional
@@ -42,17 +40,7 @@ public class GameState {
 				config.setKey(key);
 				config.setValue(key.getDefaultValue());
 				config.persist();
-				//LOGGER.info("Set config "+key+" = "+config.getValue());
-			}
-		}
-	}
-	
-	private void checkConfiguration(){
-		if(Configuration.countConfigurations() == 0){
-			LOGGER.warn("There are no configurations.");
-		} else {
-			for(Configuration config : Configuration.findAllConfigurations()){
-				LOGGER.info(config.getKey()+" = "+config.getValue());
+				LOGGER.info("Set config "+key+" to default value of \""+config.getValue()+"\"");
 			}
 		}
 	}

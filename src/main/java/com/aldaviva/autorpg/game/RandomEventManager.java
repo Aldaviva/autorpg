@@ -23,7 +23,7 @@ public class RandomEventManager {
 	private CharacterItemManager characterItemManager;
 	
 	public void init() {
-		LOGGER.info("Initializing Random Event Manager.");
+		LOGGER.debug("Initializing Random Event Manager.");
 
 		randomEvents.add(new HandofGodEvent());
 		randomEvents.add(new FindItemEvent(characterItemManager));

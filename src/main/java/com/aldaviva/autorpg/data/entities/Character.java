@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -15,12 +14,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
-
 import com.aldaviva.autorpg.AutoRPGException;
 import com.aldaviva.autorpg.AutoRPGException.NotEnoughPlayersError;
 import com.aldaviva.autorpg.data.persistence.types.MapPoint;
@@ -52,7 +49,6 @@ public class Character {
 
     private MapPoint location;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Item> items = new HashSet<Item>();
 
@@ -66,13 +62,13 @@ public class Character {
     public void setName(String name) {
         this.name = name;
     }
-    
-    public String getPossessivePronoun(){
-    	if(getFemale()){
-    		return "her";
-    	} else {
-    		return "his";
-    	}
+
+    public String getPossessivePronoun() {
+        if (getFemale()) {
+            return "her";
+        } else {
+            return "his";
+        }
     }
 
     public static List<Character> findRandomByOnline(int number) throws NotEnoughPlayersError {
@@ -85,5 +81,4 @@ public class Character {
         }
         return resultList;
     }
-    
 }

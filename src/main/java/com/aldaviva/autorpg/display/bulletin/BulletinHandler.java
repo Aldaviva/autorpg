@@ -1,4 +1,4 @@
-package com.aldaviva.autorpg.display;
+package com.aldaviva.autorpg.display.bulletin;
 
 
 public interface BulletinHandler {

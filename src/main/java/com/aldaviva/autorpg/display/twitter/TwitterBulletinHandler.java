@@ -28,20 +28,22 @@ public class TwitterBulletinHandler implements BulletinHandler, RehashListener {
 	
 	@SuppressWarnings("deprecation")
 	public void init(){
-		twitter = new TwitterFactory().getInstance();
-		
-		String consumerKey = Configuration.getValue(ConfigurationKey.TWITTER_CONSUMER_KEY);
-		String consumerSecret = Configuration.getValue(ConfigurationKey.TWITTER_CONSUMER_SECRET);
-		twitter.setOAuthConsumer(consumerKey, consumerSecret);
-		
-		String token = Configuration.getValue(ConfigurationKey.TWITTER_OAUTH_TOKEN);
-		String tokenSecret = Configuration.getValue(ConfigurationKey.TWITTER_OAUTH_TOKEN_SECRET);
-		AccessToken accessToken = new AccessToken(token, tokenSecret);
-		twitter.setOAuthAccessToken(accessToken);
+		if(Boolean.parseBoolean(Configuration.getValue(ConfigurationKey.TWITTER_ENABLED))){
+			twitter = new TwitterFactory().getInstance();
+			
+			String consumerKey = Configuration.getValue(ConfigurationKey.TWITTER_CONSUMER_KEY);
+			String consumerSecret = Configuration.getValue(ConfigurationKey.TWITTER_CONSUMER_SECRET);
+			twitter.setOAuthConsumer(consumerKey, consumerSecret);
+			
+			String token = Configuration.getValue(ConfigurationKey.TWITTER_OAUTH_TOKEN);
+			String tokenSecret = Configuration.getValue(ConfigurationKey.TWITTER_OAUTH_TOKEN_SECRET);
+			AccessToken accessToken = new AccessToken(token, tokenSecret);
+			twitter.setOAuthAccessToken(accessToken);
+		}
 	}
 
 	@Override
-	public void handle(Bulletin bulletin) {
+	public void handleBulletin(Bulletin bulletin) {
 		if(Boolean.parseBoolean(Configuration.getValue(ConfigurationKey.TWITTER_ENABLED))){
 			try {
 				twitter.updateStatus(bulletin.toString());

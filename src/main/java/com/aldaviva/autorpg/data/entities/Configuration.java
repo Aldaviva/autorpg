@@ -10,10 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.aldaviva.autorpg.RehashListener;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
@@ -23,6 +24,9 @@ import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
 @Entity
 @RooEntity
 public class Configuration {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
+	
 
     @Id
     @Enumerated(EnumType.STRING)
@@ -39,30 +43,27 @@ public class Configuration {
         this.key = key;
     }
     
-    @Transactional
     public static String getValue(ConfigurationKey key){
+    	LOGGER.debug("Asking for configuration value of "+key);
+    	
     	Configuration configuration = Configuration.findConfiguration(key);
     	
-    	if(configuration == null){
+    	/*if(configuration == null){
+    		
+    		LOGGER.debug("Config empty, setting to default value");
+    		
     		configuration = new Configuration();
     		configuration.setKey(key);
-    		configuration.setToDefaultValue();
+    		configuration.setValue(key.getDefaultValue());
     		configuration.persist();
-    		rehash();
-    	}
+//    		rehash();
+    	}*/
     	
-    	return configuration.getValue();
-    }
-    
-    public void setToDefaultValue(){
-    	if(key == null) throw new IllegalStateException("Key is null, can't set configuration to default value");
-    	
-    	setValue(key.getDefaultValue());
-    }
-    
-    public void setToDefaultValueIfUnset(){
-    	if(value == null){
-    		setToDefaultValue();
+    	if(configuration != null){
+	    	LOGGER.debug("Returning "+configuration.getValue());
+	    	return configuration.getValue();
+    	} else {
+    		return null;
     	}
     }
     

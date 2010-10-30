@@ -8,9 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.aldaviva.autorpg.game.events.Calamity;
-import com.aldaviva.autorpg.game.events.FindItem;
-import com.aldaviva.autorpg.game.events.GodSend;
+import com.aldaviva.autorpg.game.events.FindItemEvent;
+import com.aldaviva.autorpg.game.events.HandofGodEvent;
 import com.aldaviva.autorpg.game.events.RandomEvent;
 
 @Component
@@ -26,9 +25,8 @@ public class RandomEventManager {
 	public void init() {
 		LOGGER.info("Initializing Random Event Manager.");
 
-		randomEvents.add(new Calamity());
-		randomEvents.add(new GodSend());
-		randomEvents.add(new FindItem(characterItemManager));
+		randomEvents.add(new HandofGodEvent());
+		randomEvents.add(new FindItemEvent(characterItemManager));
 	}
 	
 	public void force(int i){

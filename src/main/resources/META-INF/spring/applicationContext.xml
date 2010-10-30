@@ -19,6 +19,12 @@
 		http://www.springframework.org/schema/tx/spring-tx-3.0.xsd"
 	default-init-method="init">
 	
+	<!-- For god's sake put these first -->
+	<aop:aspectj-autoproxy />
+	<bean id="annotationTransactionAspect" factory-method="aspectOf" class="org.springframework.transaction.aspectj.AnnotationTransactionAspect">
+		<property name="transactionManager" ref="transactionManager" />
+	</bean>
+	
 	<!-- Scanning -->
 	
     <!--
@@ -71,23 +77,23 @@
     
     <!-- Data Persistence -->
     
-    <bean class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" id="dataSource">
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${database.driverClassName}"/>
         <property name="url" value="${database.url}"/>
         <property name="username" value="${database.username}"/>
         <property name="password" value="${database.password}"/>
     </bean>
-    <bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="entityManagerFactory">
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" >
         <property name="dataSource" ref="dataSource"/>
     </bean>
-    <bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
-    <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>
+    
     
     <!-- Game -->
     
-    <bean id="gameState" class="com.aldaviva.autorpg.game.GameState" init-method="init">
+    <bean id="gameState" class="com.aldaviva.autorpg.game.GameState">
 		<property name="tickInterval" value="${game.tick_interval}" />
 	</bean>
 	<bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -111,5 +117,5 @@
 	<!-- WICKET -->
 	
 	<bean id="wicketApplication" class="com.aldaviva.autorpg.display.web.WicketApplication" init-method="" />
-	
+
 </beans>

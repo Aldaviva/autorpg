@@ -75,7 +75,7 @@ public class Character {
     	}
     }
 
-    public static List<Character> findOnlinePlayersByRandom(int number) throws NotEnoughPlayersError {
+    public static List<Character> findRandomByOnline(int number) throws NotEnoughPlayersError {
         EntityManager em = entityManager();
         TypedQuery<Character> q = em.createQuery("SELECT Character FROM Character AS character WHERE character.player.online = true ORDER BY random()", Character.class);
         q.setMaxResults(number);

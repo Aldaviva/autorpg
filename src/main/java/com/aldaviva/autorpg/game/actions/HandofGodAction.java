@@ -8,7 +8,7 @@ import com.aldaviva.autorpg.data.entities.Player;
 import com.aldaviva.autorpg.game.RandomEventManager;
 
 @Configurable
-public class FindItemAction implements PlayerAction {
+public class HandofGodAction implements PlayerAction {
 
 	@Autowired
 	private RandomEventManager randomEventManager;
@@ -18,8 +18,8 @@ public class FindItemAction implements PlayerAction {
 		Player player = Player.findByOnlineUserhost(userhost);
 		if(player != null && player.getSuperuser()){
 			
-			randomEventManager.force(1);
-			return "Giving someone an item...";
+			randomEventManager.force(0);
+			return "Triggering Hand of God...";
 		}
 		return "Cheats require superuser privileges.";
 	}

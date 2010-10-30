@@ -37,7 +37,7 @@ public class BulletinManager {
 	
 	public void publish(Bulletin bulletin){
 		for (BulletinHandler bulletinHandler : bulletinHandlers) {
-			bulletinHandler.handle(bulletin);
+			bulletinHandler.handleBulletin(bulletin);
 		}
 	}
 	
@@ -46,7 +46,7 @@ public class BulletinManager {
 		private final Logger LOGGER = LoggerFactory.getLogger(Bulletin.class);
 		
 		@Override
-		public void handle(Bulletin bulletin) {
+		public void handleBulletin(Bulletin bulletin) {
 			LOGGER.info(bulletin.toString());
 		}
 		

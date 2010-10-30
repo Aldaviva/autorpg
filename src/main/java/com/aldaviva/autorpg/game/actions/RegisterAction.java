@@ -16,9 +16,9 @@ public class RegisterAction implements PlayerAction {
 	private PlayerManager playerManager;
 
 	@Override
-	public String perform(String sender, String userhost, String[] argv, String argsExceptFirst) throws AutoRPGException {
+	public String perform(String sender, String userhost, String[] argv, String argsExceptFirstArg) throws AutoRPGException {
 		String playerName = argv[1];
-		String password = argsExceptFirst;
+		String password = argsExceptFirstArg;
 		playerManager.register(userhost, playerName, password);
 		return Message.REGISTERED_SUCCESS.fillIn("playerName", playerName) + "\n"
 			+ Message.CREATE_HINT.fillIn("botNickname", Configuration.getValue(ConfigurationKey.BOT_NICKNAME));

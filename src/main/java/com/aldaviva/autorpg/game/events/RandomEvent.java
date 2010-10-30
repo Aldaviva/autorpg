@@ -17,7 +17,7 @@ public abstract class RandomEvent {
 	@Autowired
 	protected BulletinManager bulletinManager;
 	
-	private Random prng = new Random();
+	private static Random prng = new Random();
 
 	public abstract int getTimesPerDay();
 
@@ -38,7 +38,7 @@ public abstract class RandomEvent {
 		bulletinManager.publish(new Bulletin(getAnnouncement()));
 	}
 
-	protected int getRandomInt(int lowerInclusive, int upperInclusive) {
+	public static int getRandomInt(int lowerInclusive, int upperInclusive) {
 		if (upperInclusive < lowerInclusive) {
 			throw new IllegalArgumentException("Arguments in wrong order");
 		}

@@ -4,7 +4,7 @@ import com.aldaviva.autorpg.AutoRPGException;
 
 public interface PlayerAction {
 	
-	public String perform(String sender, String userhost, String[] argv, String argsExceptFirst) throws AutoRPGException;
+	public String perform(String sender, String userhost, String[] argv, String argsExceptFirstArg) throws AutoRPGException;
 	
 	public boolean isCheat();
 	

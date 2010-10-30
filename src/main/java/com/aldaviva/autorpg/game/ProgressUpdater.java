@@ -32,7 +32,7 @@ public class ProgressUpdater {
 	}
 
 	public void update() {
-		for(Player player : Player.findPlayersByOnline()){
+		for(Player player : Player.findByOnline()){
 		
 			for (Character character : Character.findCharactersByPlayer(player).getResultList()) {
 	

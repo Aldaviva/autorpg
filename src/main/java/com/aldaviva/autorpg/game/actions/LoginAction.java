@@ -17,9 +17,9 @@ public class LoginAction implements PlayerAction {
 	private PlayerManager playerManager;
 
 	@Override
-	public String perform(String sender, String userhost, String[] argv, String argsExceptFirst) throws AutoRPGException {
+	public String perform(String sender, String userhost, String[] argv, String argsExceptFirstArg) throws AutoRPGException {
 		String playerName = argv[1];
-		String password = argsExceptFirst;
+		String password = argsExceptFirstArg;
 		Player player;
 		try {
 			player = playerManager.login(playerName, password, userhost);

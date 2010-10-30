@@ -14,8 +14,11 @@ public class LogoutAction implements PlayerAction {
 
 	@Override
 	public String perform(String sender, String userhost, String[] argv, String argsExceptFirst) throws AutoRPGException {
-		playerManager.logout(userhost);
-		return "Logged out. Your characters experience is frozen until you log in again.";
+		if(playerManager.logout(userhost)){
+			return "Logged out.";
+		} else {
+			return "You were not logged in to start with.";
+		}
 	}
 
 	@Override

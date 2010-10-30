@@ -68,12 +68,8 @@ public enum IrcPlayerAction implements PlayerAction {
 		
 	LOGOUT(
 		new LogoutAction(),
-		new LinkedHashMap<String, String>(){
-			private static final long serialVersionUID = 1L;
-			{
-				put("player name", "The player name you used with the REGISTER command.");
-			}},
-		"LOGOUT Robert"
+		new LinkedHashMap<String, String>(),
+		"LOGOUT"
 		),
 		
 	/* Cheats */
@@ -81,7 +77,12 @@ public enum IrcPlayerAction implements PlayerAction {
 		new FindItemAction(),
 		new LinkedHashMap<String, String>(),
 		"FINDITEM"
-		);
+		),
+	HANDOFGOD(
+			new HandofGodAction(),
+			new LinkedHashMap<String, String>(),
+			"HANDOFGOD"
+	);
 
 	private PlayerAction action;
 	private LinkedHashMap<String, String> arguments;

@@ -29,9 +29,10 @@ public enum IrcPlayerAction implements PlayerAction {
 			private static final long serialVersionUID = 1L;
 			{
 				put("character name", "Your character's name as it will appear in-game.");
+				put("gender", "Female or Male");
 				put("class", "The class name of your choosing.");
 			}},
-		"CREATE Daemar Magical Girl"),
+		"CREATE Daemar Female Magical Girl"),
 		
 	CHARACTER(
 		new CharacterAction(),

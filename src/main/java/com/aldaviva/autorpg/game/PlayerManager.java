@@ -23,6 +23,7 @@ import com.aldaviva.autorpg.display.bulletin.BulletinManager;
 import com.aldaviva.autorpg.game.actions.LoginAction;
 
 @Component
+@Transactional
 public class PlayerManager {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PlayerManager.class);
@@ -67,6 +68,7 @@ public class PlayerManager {
 		player.setUserhost(userhost);
 		player.setName(playerName);
 		player.setOnline(true);
+		player.setSuperuser(false);
 		
 		String hashedPassword = Utils.hash(playerName+password);
 		player.setPassword(hashedPassword);
@@ -75,7 +77,7 @@ public class PlayerManager {
 		LOGGER.info("Player "+player.getName()+" registered.");
 	}
 	
-	public Character createCharacter(String userhost, String avatarName, String designation) throws MustRegisterToCreateAvatarError{
+	public Character createCharacter(String userhost, String avatarName, String designation, boolean female) throws MustRegisterToCreateAvatarError{
 		Player player = Player.findByUserhost(userhost);
 		if(player != null){
 			Character character = new Character();
@@ -87,6 +89,7 @@ public class PlayerManager {
 			character.setDesignation(designation);
 			character.setLocation(new MapPoint(1, 1));
 			character.setPlayer(player);
+			character.setFemale(female);
 			
 			LOGGER.debug("new avatar's player attrib set to "+player.getName()+". Result of calling getter: "+character.getPlayer());
 			

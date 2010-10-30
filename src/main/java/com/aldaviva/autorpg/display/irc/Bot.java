@@ -59,7 +59,6 @@ public class Bot extends PircBot implements BulletinHandler {
 	/* Event listeners */
 
 	@Override
-	@Transactional
 	protected void onPrivateMessage(String sender, String login, String hostname, String message) {
 		String[] argv = StringUtils.split(message);
 		String argsExceptFirstArg = "";

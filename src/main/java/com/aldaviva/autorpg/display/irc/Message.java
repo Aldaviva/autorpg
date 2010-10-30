@@ -7,7 +7,7 @@ public enum Message {
 	REGISTERED_SUCCESS("Welcome to the game, ${playerName}! You have successfully registered."),
 	REGISTER_HINT("To register a new Player account, use "+botQuery("register", "playerName", "password")+"."),
 	CREATE_HINT("Use "+botQuery("create", "name", "class")+" to create a character."),
-	CREATED_AVATAR("${name}, the Level 1 ${class}, has joined the realm."),
+	CREATED_AVATAR(Colors.BOLD+"${name}"+Colors.NORMAL+", the Level 1 ${class}, has joined the realm."),
 	LOGIN_FAILED_NO_SUCH_USER_SUGGESTION("Try creating the user account with "+botQuery("create", "name", "password")+"."),
 	NO_SUCH_CHARACTER_SUGGESTION("Check the list of characters using "+botQuery("list", "characters")+"."),
 	WRONG_PASSWORD("YOU DIDN'T SAY THE MAGIC WORD!!!"),

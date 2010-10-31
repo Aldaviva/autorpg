@@ -19,7 +19,7 @@ public class BulletinManager {
 	
 	private List<BulletinHandler> bulletinHandlers = new ArrayList<BulletinHandler>();
 	
-	@Autowired
+	@Autowired(required = false)
 	private Bot bot;
 	
 	public void init(){
@@ -27,7 +27,9 @@ public class BulletinManager {
 		try {
 			
 			bulletinHandlers.add(new LoggerBulletinHandler());
-			bulletinHandlers.add(bot);
+			if(bot != null){
+				bulletinHandlers.add(bot);
+			}
 			bulletinHandlers.add(new TwitterBulletinHandler());
 			
 		} catch (ConfigurationIncompleteError e){

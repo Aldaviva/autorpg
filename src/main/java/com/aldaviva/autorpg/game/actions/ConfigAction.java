@@ -1,6 +1,7 @@
 package com.aldaviva.autorpg.game.actions;
 
-import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aldaviva.autorpg.AutoRPGException;
 import com.aldaviva.autorpg.data.entities.Configuration;
@@ -8,9 +9,11 @@ import com.aldaviva.autorpg.data.entities.Player;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.irc.Message;
 
+@Configurable
 public class ConfigAction implements PlayerAction {
 
 	@Override
+	@Transactional
 	public String perform(String sender, String userhost, String[] argv, String argsExceptFirst) throws AutoRPGException {
 		Player player = Player.findByOnlineAndUserhost(userhost);
 		if(player != null && player.getSuperuser()){
@@ -29,7 +32,7 @@ public class ConfigAction implements PlayerAction {
 				return getSingleValue(configurationKey);
 				
 			} else {
-				String value = StringUtils.split(argsExceptFirst, null, 2)[1];
+				String value = argsExceptFirst;
 				Configuration.findConfiguration(configurationKey).setValue(value);
 				return Message.CONFIG_SET.fillIn("type", configurationKey.name(), "value", value);
 			}

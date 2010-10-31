@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/" xml:lang="en">
+	<wicket:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</wicket:head>
+	 
+	<body>
+		<wicket:extend>
+			<div class="characters">
+				<div class="character" wicket:id="character">
+					<h3 wicket:id="name"></h3>
+					<div class="level">Level <span wicket:id="level"></span></div>
+					<div class="designation" wicket:id="designation"></div>
+					<div class="experience"><span wicket:id="experience"></span> experience</div>
+					<div class="items">
+						<ul>
+							<li wicket:id="item"></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</wicket:extend>
+	</body>
+</html>

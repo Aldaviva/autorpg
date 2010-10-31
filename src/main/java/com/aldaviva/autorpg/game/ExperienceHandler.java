@@ -2,18 +2,28 @@ package com.aldaviva.autorpg.game;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.display.bulletin.Bulletin;
+import com.aldaviva.autorpg.display.bulletin.BulletinManager;
 
+@Configurable
 class ExperienceHandler implements CharacterProgressHandler {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExperienceHandler.class);
 	
+	private static final int EXPERIENCE_PER_SECOND = 1;
+
+	@Autowired
+	private BulletinManager bulletinManager;
+	
 	public void handleProgress(Character character) {
 		Integer experience = character.getExperience();
-		experience += ProgressUpdater.EXPERIENCE_PER_SECOND * GameState.getTickInterval();
+		experience += EXPERIENCE_PER_SECOND * GameState.getTickInterval();
 
 		character.setExperience(experience);
 
@@ -27,7 +37,8 @@ class ExperienceHandler implements CharacterProgressHandler {
 	}
 	
 	private void onLevelUp(Character character){
-		LOGGER.info(character.getName() + " has reached level " + character.getLevel() + "!");
+		Bulletin bulletin = new Bulletin(character.getName() + " has reached Level " + character.getLevel() + "!");
+		bulletinManager.publish(bulletin);
 	}
 	
 	/**

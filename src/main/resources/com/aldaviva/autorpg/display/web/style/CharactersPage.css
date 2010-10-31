@@ -1,0 +1,29 @@
+.characters {
+	text-align: center;
+}
+
+.character {
+	display: inline-block;
+	width: 166px;
+	height: 250px;
+	background: black;
+	border-radius: 6px;
+	color: white;
+	margin: 0 1em 1em 0;
+	padding: 1em;
+	vertical-align: top;
+}
+
+.character h3 {
+	font-size: 1.5em;
+	margin-bottom: 0.5em;
+}
+
+.character div {
+	line-height: 1.6em;
+	border-top: 1px solid hsla(0, 0%, 100%, 0.25);
+}
+
+.character .level {
+	border-top: none !important;
+}

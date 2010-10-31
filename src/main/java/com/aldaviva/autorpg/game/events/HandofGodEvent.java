@@ -45,9 +45,9 @@ public class HandofGodEvent extends RandomEvent {
 	public String getAnnouncement() {
 		StringBuilder buf = new StringBuilder()
 
-		.append("Hand Of God: ")
+//		.append("Hand Of God: ")
 
-		.append(handofgod.getDescription()).append(". ")
+		.append(handofgod.getDescription()).append(" ")
 
 		.append(expAnnouncement).append(".");
 

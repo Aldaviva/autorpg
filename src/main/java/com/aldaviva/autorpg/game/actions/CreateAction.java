@@ -27,7 +27,7 @@ public class CreateAction implements PlayerAction {
 		boolean female = genderString.substring(0, 1).equalsIgnoreCase("f");
 		String designation = StringUtils.split(argsExceptFirstArg, null, 2)[1];
 		Character character = playerManager.createCharacter(userhost, characterName, designation, female);
-		bulletinManager.publish(new Bulletin(Message.CREATED_AVATAR.fillIn("name", character.getName(), "class", character.getDesignation())));
+		bulletinManager.publish(new Bulletin(Message.CREATED_AVATAR.fillIn("name", character.getName(), "designation", character.getDesignation())));
 		return "Character created.";
 	}
 

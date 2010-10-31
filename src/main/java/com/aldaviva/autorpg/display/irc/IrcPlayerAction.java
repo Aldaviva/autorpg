@@ -30,7 +30,7 @@ public enum IrcPlayerAction implements PlayerAction {
 			{
 				put("character name", "Your character's name as it will appear in-game.");
 				put("gender", "Female or Male");
-				put("class", "The class name of your choosing.");
+				put("designation", "The designation or class name of your choosing.");
 			}},
 		"CREATE Daemar Female Magical Girl"),
 		

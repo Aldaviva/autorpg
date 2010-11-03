@@ -11,6 +11,8 @@ import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.entities.Item;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.display.bulletin.Message;
+import com.aldaviva.autorpg.display.bulletin.Style;
 import com.aldaviva.autorpg.game.CharacterItemManager;
 
 @Configurable
@@ -26,6 +28,7 @@ public class FindItemEvent extends RandomEvent {
 
 	private Character character;
 	private Item newItem;
+	private boolean keepingNewItem;
 	
 	@Override
 	public int getTimesPerDay() {
@@ -45,7 +48,7 @@ public class FindItemEvent extends RandomEvent {
 			character = Character.findRandomByOnline(1).get(0);
 			newItem = getRandomItem();
 			
-			characterItemManager.offerCharacterAnItem(newItem, character);
+			keepingNewItem = characterItemManager.offerCharacterAnItem(newItem, character);
 			
 		} catch(NotEnoughPlayersError e) {
 			LOGGER.info("Not enough players for this Random Event to occur.");
@@ -54,11 +57,11 @@ public class FindItemEvent extends RandomEvent {
 
 	@Override
 	public String getAnnouncement() {
-		String result = character.getName() + " has found " + newItem.getArticle() + newItem.getName()+".";
-		if(newItem.getRare()){
-			result += "\nThis is a rare item!";
+		String result = "";
+		String itemStyle = newItem.getRare() ? Style.ITEM_RARE_NAME : Style.ITEM_NAME;
+		if(keepingNewItem){
+			result = Message.CHARACTER_FOUND_ITEM.fillIn("character.name", character.getName(), "itemStyle", itemStyle, "item.article", newItem.getArticle().toString(), "item.name", newItem.getName());
 		}
 		return result;
 	}
-
 }

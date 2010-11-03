@@ -16,10 +16,13 @@ import com.aldaviva.autorpg.AutoRPGException.LoginFailedNoSuchPlayerError;
 import com.aldaviva.autorpg.AutoRPGException.MustRegisterToCreateAvatarError;
 import com.aldaviva.autorpg.Utils;
 import com.aldaviva.autorpg.data.entities.Character;
+import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.entities.Player;
+import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
 import com.aldaviva.autorpg.data.persistence.types.MapPoint;
 import com.aldaviva.autorpg.display.bulletin.Bulletin;
 import com.aldaviva.autorpg.display.bulletin.BulletinManager;
+import com.aldaviva.autorpg.display.irc.IrcMessage;
 import com.aldaviva.autorpg.game.actions.LoginAction;
 
 @Component
@@ -30,7 +33,7 @@ public class PlayerManager {
 	
 	@Autowired
 	private BulletinManager bulletinManager;
-
+	
 	public Player login(String playerName, String plainPassword, String userhost) throws LoginFailedNoSuchPlayerError, LoginFailedBadPasswordError{
 		Player player = Player.findPlayer(playerName);
 		if(player != null){
@@ -100,7 +103,6 @@ public class PlayerManager {
 		}
 	}
 	
-	@Transactional
 	public void enforcePlayersOnlineState(List<String> userhostsInChannel){
 		LOGGER.info("Enforcing Players' online state.");
 		
@@ -123,9 +125,26 @@ public class PlayerManager {
 		
 		if(!charactersStillOnline.isEmpty()){
 			Bulletin rejoinedBulletin = LoginAction.createCharactersRejoinedBulletin(charactersStillOnline);
-			bulletinManager.publish(rejoinedBulletin);
+			bulletinManager.publish(rejoinedBulletin, false);
 		}
 		
+	}
+	
+	public String autoJoin(String nick, String hostname){
+		String userhost = nick + '@' + hostname;
+		List<Character> charactersJoining = new ArrayList<Character>();
+		Player candidatePlayer = Player.findByUserhost(userhost);
+		
+		if(candidatePlayer != null){
+			candidatePlayer.setOnline(true);
+			
+			charactersJoining.addAll(Character.findCharactersByPlayer(candidatePlayer).getResultList());
+			Bulletin rejoinedBulletin = LoginAction.createCharactersRejoinedBulletin(charactersJoining);
+			bulletinManager.publish(rejoinedBulletin, false);
+			return IrcMessage.WELCOME_REJOINED.fillIn("playerName", candidatePlayer.getName());
+		} else {
+			return IrcMessage.WELCOME_NEW_PLAYER.fillIn("botNickname", Configuration.getValue(ConfigurationKey.BOT_NICKNAME));
+		}
 	}
 	
 }

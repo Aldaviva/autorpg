@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import com.aldaviva.autorpg.AutoRPGException;
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
-import com.aldaviva.autorpg.display.irc.Message;
+import com.aldaviva.autorpg.display.irc.IrcMessage;
 import com.aldaviva.autorpg.game.PlayerManager;
 
 @Configurable
@@ -20,8 +20,8 @@ public class RegisterAction implements PlayerAction {
 		String playerName = argv[1];
 		String password = argsExceptFirstArg;
 		playerManager.register(userhost, playerName, password);
-		return Message.REGISTERED_SUCCESS.fillIn("playerName", playerName) + "\n"
-			+ Message.CREATE_HINT.fillIn("botNickname", Configuration.getValue(ConfigurationKey.BOT_NICKNAME));
+		return IrcMessage.REGISTERED_SUCCESS.fillIn("playerName", playerName) + "\n"
+			+ IrcMessage.CREATE_HINT.fillIn("botNickname", Configuration.getValue(ConfigurationKey.BOT_NICKNAME));
 	}
 
 	@Override

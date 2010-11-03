@@ -69,21 +69,24 @@ public enum IrcPlayerAction implements PlayerAction {
 		
 	LOGOUT(
 		new LogoutAction(),
-		new LinkedHashMap<String, String>(),
 		"LOGOUT"
+		),
+	
+	HELP(
+		new HelpAction(),
+		"HELP"
 		),
 		
 	/* Cheats */
 	FINDITEM(
 		new FindItemAction(),
-		new LinkedHashMap<String, String>(),
 		"FINDITEM"
 		),
+		
 	HANDOFGOD(
-			new HandofGodAction(),
-			new LinkedHashMap<String, String>(),
-			"HANDOFGOD"
-	);
+		new HandofGodAction(),
+		"HANDOFGOD"
+		);
 
 	private PlayerAction action;
 	private LinkedHashMap<String, String> arguments;
@@ -107,6 +110,10 @@ public enum IrcPlayerAction implements PlayerAction {
 	
 	private IrcPlayerAction(PlayerAction action, LinkedHashMap<String, String> arguments, String[] examples) {
 		this(action, arguments, arguments.size(), examples);
+	}
+	
+	private IrcPlayerAction(PlayerAction action, String example){
+		this(action, new LinkedHashMap<String, String>(), 0, new String[]{example});
 	}
 
 	public LinkedHashMap<String, String> getArguments() {

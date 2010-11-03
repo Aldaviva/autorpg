@@ -14,7 +14,8 @@ import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.data.entities.Player;
 import com.aldaviva.autorpg.display.bulletin.Bulletin;
 import com.aldaviva.autorpg.display.bulletin.BulletinManager;
-import com.aldaviva.autorpg.display.irc.Message;
+import com.aldaviva.autorpg.display.bulletin.Style;
+import com.aldaviva.autorpg.display.irc.IrcMessage;
 import com.aldaviva.autorpg.game.PlayerManager;
 
 @Configurable
@@ -40,9 +41,9 @@ public class LoginAction implements PlayerAction {
 			
 			return "Logged in as "+player.getName()+".";
 		} catch (LoginFailedBadPasswordError e){
-			return Message.WRONG_PASSWORD.fillIn();
+			return IrcMessage.WRONG_PASSWORD.fillIn();
 		} catch (LoginFailedNoSuchPlayerError e){
-			return Message.LOGIN_FAILED_NO_SUCH_USER_SUGGESTION.fillIn();
+			return IrcMessage.LOGIN_FAILED_NO_SUCH_USER_SUGGESTION.fillIn();
 		}
 	}
 	
@@ -52,7 +53,7 @@ public class LoginAction implements PlayerAction {
 		if(!characters.isEmpty()){
 			List<String> characterNames = new ArrayList<String>();
 			for (Character character : characters) {
-				characterNames.add(character.getName());
+				characterNames.add(Style.CHARACTER_NAME+character.getName()+Style.NORMAL);
 			}
 			
 			String namesList = Utils.commaAndList(characterNames);

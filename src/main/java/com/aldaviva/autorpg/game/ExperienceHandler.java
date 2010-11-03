@@ -10,6 +10,7 @@ import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.bulletin.Bulletin;
 import com.aldaviva.autorpg.display.bulletin.BulletinManager;
+import com.aldaviva.autorpg.display.bulletin.Message;
 
 @Configurable
 class ExperienceHandler implements CharacterProgressHandler {
@@ -37,7 +38,7 @@ class ExperienceHandler implements CharacterProgressHandler {
 	}
 	
 	private void onLevelUp(Character character){
-		Bulletin bulletin = new Bulletin(character.getName() + " has reached Level " + character.getLevel() + "!");
+		Bulletin bulletin = new Bulletin(Message.CHARACTER_LEVELS_UP.fillIn("character.name", character.getName(), "character.level", String.valueOf(character.getLevel())));
 		bulletinManager.publish(bulletin);
 	}
 	

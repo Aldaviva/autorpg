@@ -8,7 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.irc.IrcPlayerAction;
-import com.aldaviva.autorpg.display.irc.Message;
+import com.aldaviva.autorpg.display.irc.IrcMessage;
 
 public abstract class AutoRPGException extends Exception {
 
@@ -45,14 +45,14 @@ public abstract class AutoRPGException extends Exception {
 	public static class LoginFailedNoSuchPlayerError extends StupidUserError {
 		private static final long serialVersionUID = 1L;
 		public LoginFailedNoSuchPlayerError() {
-			super("Could not find the requested player.", Message.LOGIN_FAILED_NO_SUCH_USER_SUGGESTION.fillIn());
+			super("Could not find the requested player.", IrcMessage.LOGIN_FAILED_NO_SUCH_USER_SUGGESTION.fillIn());
 		}
 	}
 	
 	public static class NoSuchCharacterError extends StupidUserError {
 		private static final long serialVersionUID = 1L;
 		public NoSuchCharacterError() {
-			super("Could not find the requested character.", Message.LOGIN_FAILED_NO_SUCH_USER_SUGGESTION.fillIn());
+			super("Could not find the requested character.", IrcMessage.LOGIN_FAILED_NO_SUCH_USER_SUGGESTION.fillIn());
 		}
 	}
 	
@@ -60,21 +60,21 @@ public abstract class AutoRPGException extends Exception {
 	public static class LoginFailedBadPasswordError extends StupidUserError {
 		private static final long serialVersionUID = 1L;
 		public LoginFailedBadPasswordError() {
-			super("Incorrect password.", Message.WRONG_PASSWORD_SUGGESTION.fillIn("adminEmail", Configuration.getValue(ConfigurationKey.SUPPORT_CONTACT)));
+			super("Incorrect password.", IrcMessage.WRONG_PASSWORD_SUGGESTION.fillIn("adminEmail", Configuration.getValue(ConfigurationKey.SUPPORT_CONTACT)));
 		}
 	}
 	
 	public static class DuplicatePlayerError extends StupidUserError {
 		private static final long serialVersionUID = 1L;
 		public DuplicatePlayerError() {
-			super("There is already a player with your nickname and IP address.", Message.MULTIPLE_CHARACTERS_SUGGESTION.fillIn());
+			super("There is already a player with your nickname and IP address.", IrcMessage.MULTIPLE_CHARACTERS_SUGGESTION.fillIn());
 		}
 	}
 	
 	public static class MustRegisterToCreateAvatarError extends StupidUserError {
 		private static final long serialVersionUID = 1L;
 		public MustRegisterToCreateAvatarError() {
-			super("You are not logged in.", Message.LOGIN_REQUIRED.fillIn());
+			super("You are not logged in.", IrcMessage.LOGIN_REQUIRED.fillIn());
 		}
 	}
 	
@@ -120,7 +120,7 @@ public abstract class AutoRPGException extends Exception {
 	public static class ConfigurationIncompleteError extends AutoRPGException {
 		private static final long serialVersionUID = 1L;
 		public ConfigurationIncompleteError(ConfigurationKey key) {
-			super("Configuration for "+key.name()+" is incomplete.", Message.CONFIGURATION_INCOMPLETE_HINT.fillIn("configurationKey", key.name()));
+			super("Configuration for "+key.name()+" is incomplete.", IrcMessage.CONFIGURATION_INCOMPLETE_HINT.fillIn("configurationKey", key.name()));
 		}
 	}
 }

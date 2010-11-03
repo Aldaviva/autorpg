@@ -21,6 +21,7 @@ public enum ConfigurationKey {
 	BATTLES_PER_DAY("128"),
 	TEAM_BATTLES_PER_DAY("16"),
 	BOT_NICKNAME("AutoRPG-IdleMaster"),
+	NICKSERV_PASSWORD("!autorpg!"),
 	SERVER_URL("irc.aldaviva.com"),
 	PORT("6667"),
 	CHANNEL("#autorpg"),

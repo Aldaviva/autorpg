@@ -38,8 +38,16 @@ public class BulletinManager {
 	}
 	
 	public void publish(Bulletin bulletin){
-		for (BulletinHandler bulletinHandler : bulletinHandlers) {
-			bulletinHandler.handleBulletin(bulletin);
+		publish(bulletin, true);
+	}
+	
+	public void publish(Bulletin bulletin, boolean publishToTwitter){
+		if(bulletin != null && !bulletin.isEmpty()){
+			for (BulletinHandler bulletinHandler : bulletinHandlers) {
+				if(publishToTwitter || !bulletinHandler.getClass().equals(TwitterBulletinHandler.class)){
+					bulletinHandler.handleBulletin(bulletin);
+				}
+			}
 		}
 	}
 	
@@ -49,7 +57,7 @@ public class BulletinManager {
 		
 		@Override
 		public void handleBulletin(Bulletin bulletin) {
-			LOGGER.info(bulletin.toString());
+			LOGGER.info(bulletin.toStringStripFormatting());
 		}
 		
 	}

@@ -7,7 +7,7 @@ import com.aldaviva.autorpg.AutoRPGException;
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.entities.Player;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
-import com.aldaviva.autorpg.display.irc.Message;
+import com.aldaviva.autorpg.display.irc.IrcMessage;
 
 @Configurable
 public class ConfigAction implements PlayerAction {
@@ -34,7 +34,7 @@ public class ConfigAction implements PlayerAction {
 			} else {
 				String value = argsExceptFirst;
 				Configuration.findConfiguration(configurationKey).setValue(value);
-				return Message.CONFIG_SET.fillIn("type", configurationKey.name(), "value", value);
+				return IrcMessage.CONFIG_SET.fillIn("type", configurationKey.name(), "value", value);
 			}
 		}
 		
@@ -43,7 +43,7 @@ public class ConfigAction implements PlayerAction {
 	
 	private String getSingleValue(ConfigurationKey configurationKey){
 		String value = Configuration.getValue(configurationKey);
-		return Message.CONFIG_GET.fillIn("type", configurationKey.name(), "value", value);
+		return IrcMessage.CONFIG_GET.fillIn("type", configurationKey.name(), "value", value);
 	}
 
 	@Override

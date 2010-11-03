@@ -46,8 +46,8 @@ public class TwitterBulletinHandler implements BulletinHandler, RehashListener {
 	public void handleBulletin(Bulletin bulletin) {
 		if(Boolean.parseBoolean(Configuration.getValue(ConfigurationKey.TWITTER_ENABLED))){
 			try {
-				twitter.updateStatus(bulletin.toString());
-				LOGGER.debug("Updating status to \"" + bulletin.toString() + "\".");
+				twitter.updateStatus(bulletin.toStringStripFormatting());
+				LOGGER.debug("Updating status to \"" + bulletin.toStringStripFormatting() + "\".");
 			} catch (TwitterException e) {
 				LOGGER.error(e.getMessage());
 			}

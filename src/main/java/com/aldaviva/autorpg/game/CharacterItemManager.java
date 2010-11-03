@@ -18,15 +18,18 @@ public class CharacterItemManager {
 		LOGGER.debug("Initializing Character Item Manager.");
 	}
 	
-	public void offerCharacterAnItem(Item newItem, Character character){
+	public boolean offerCharacterAnItem(Item newItem, Character character){
 		Item toDiscard = itemToDiscard(character, newItem);
 		if(toDiscard == null){
 			addItemToCharacter(character, newItem);
+			return true;
 		} else if(toDiscard.equals(newItem)){
 			discardNewItem(character, toDiscard);
+			return false;
 		} else {
 			discardExistingItem(character, toDiscard);
 			addItemToCharacter(character, newItem);
+			return true;
 		}
 	}
 	
@@ -61,11 +64,11 @@ public class CharacterItemManager {
 	}
 
 	private void discardNewItem(Character character, Item item) {
-		LOGGER.info("The new item has a shorter name than " + character.getName() + "'s similar items, so it is discarded.");
+		LOGGER.info("The new item is worse than " + character.getName() + "'s similar items, so it is discarded.");
 	}
 
 	private void discardExistingItem(Character character, Item item) {
-		LOGGER.info("The new item has a longer name than " + item.getArticle() + item.getName() + ", so it is replaced in " + character.getName()
+		LOGGER.info("The new item is better than " + item.getArticle() + item.getName() + ", so it is replaced in " + character.getName()
 				+ "'s inventory.");
 		character.getItems().remove(item);
 	}

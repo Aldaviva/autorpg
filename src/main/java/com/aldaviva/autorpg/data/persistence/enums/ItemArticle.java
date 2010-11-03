@@ -1,7 +1,7 @@
 package com.aldaviva.autorpg.data.persistence.enums;
 
 public enum ItemArticle {
-	NORMAL_CONSONANT("a "), NORMAL_VOWEL("an "), DEFINITE("The "), POSSESSIVE(""), PROPER("");
+	INDEFINITE_CONSONANT("a "), INDEFINITE_VOWEL("an "), DEFINITE("The "), POSSESSIVE(""), PROPER("");
 	
 	private String article;
 

@@ -9,19 +9,18 @@ import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.entities.Handofgod;
 import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.display.bulletin.Message;
 
 public class HandofGodEvent extends RandomEvent {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(HandofGodEvent.class);
 	
-	protected static final String expAnnouncement = "${player}.experience ${operator} ${reward}";
-
 	private Character target;
 	private Handofgod handofgod;
 	private int reward;
 
 	protected String getOperator() {
-		return handofgod.getBeneficial() ? "+=" : "-=";
+		return handofgod.getBeneficial() ? "gains" : "loses";
 	}
 
 	@Transactional
@@ -47,12 +46,11 @@ public class HandofGodEvent extends RandomEvent {
 
 //		.append("Hand Of God: ")
 
-		.append(handofgod.getDescription()).append(" ")
+		.append(handofgod.getDescription().replace("${player}", target.getName())).append(" ")
 
-		.append(expAnnouncement).append(".");
+		.append(Message.HANDOFGOD_REWARD.fillIn("player", target.getName(), "operator", getOperator(), "reward", String.valueOf(Math.abs(reward))));
 
-		return buf.toString().replace("${player}", target.getName()).replace("${operator}", getOperator())
-				.replace("${reward}", String.valueOf(Math.abs(reward)));
+		return buf.toString();
 	}
 	
 	@Override

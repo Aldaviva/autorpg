@@ -41,6 +41,9 @@ public class Bot extends PircBot implements BulletinHandler {
 		setVerbose(true);
 		setMessageDelay(250);
 		setAutoNickChange(true);
+		setFinger("Aldaviva AutoRPG Idlemaster");
+		setVersion("AutoRPG is IdleRPG Mk.III, designed and implemented by Ben Hutchison.");
+		setLogin("IdleMaster");
 		start();
 	}
 
@@ -95,7 +98,7 @@ public class Bot extends PircBot implements BulletinHandler {
 		if (sender.equals(Configuration.getValue(ConfigurationKey.BOT_NICKNAME))) {
 			sendMessage(channel, "IdleMaster online.");
 		} else {
-			sendNotice(sender, "Welcome to AutoRPG.");
+			sendNotice(sender, playerManager.autoJoin(sender, hostname));
 		}
 		
 		/* This will ask for all users and their userhosts in this channel.
@@ -170,5 +173,5 @@ public class Bot extends PircBot implements BulletinHandler {
 	public void handleBulletin(Bulletin bulletin) {
 		sendMessagesSplitByNewline(Configuration.getValue(ConfigurationKey.CHANNEL), bulletin.toString());
 	}
-
+	
 }

@@ -8,7 +8,7 @@ import com.aldaviva.autorpg.AutoRPGException;
 import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.display.bulletin.Bulletin;
 import com.aldaviva.autorpg.display.bulletin.BulletinManager;
-import com.aldaviva.autorpg.display.irc.Message;
+import com.aldaviva.autorpg.display.irc.IrcMessage;
 import com.aldaviva.autorpg.game.PlayerManager;
 
 @Configurable
@@ -27,7 +27,7 @@ public class CreateAction implements PlayerAction {
 		boolean female = genderString.substring(0, 1).equalsIgnoreCase("f");
 		String designation = StringUtils.split(argsExceptFirstArg, null, 2)[1];
 		Character character = playerManager.createCharacter(userhost, characterName, designation, female);
-		bulletinManager.publish(new Bulletin(Message.CREATED_AVATAR.fillIn("name", character.getName(), "designation", character.getDesignation())));
+		bulletinManager.publish(new Bulletin(IrcMessage.CREATED_AVATAR.fillIn("name", character.getName(), "designation", character.getDesignation())));
 		return "Character created.";
 	}
 

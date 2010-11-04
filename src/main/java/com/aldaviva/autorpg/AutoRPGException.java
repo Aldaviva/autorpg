@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.aldaviva.autorpg.data.entities.Configuration;
-import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.irc.IrcPlayerAction;
 import com.aldaviva.autorpg.display.irc.IrcMessage;
 

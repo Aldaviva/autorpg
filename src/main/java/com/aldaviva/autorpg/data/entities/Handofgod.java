@@ -11,7 +11,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 
 import com.aldaviva.autorpg.Utils;
-import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 
 @RooJavaBean
 @RooToString

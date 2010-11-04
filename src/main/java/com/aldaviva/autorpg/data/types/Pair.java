@@ -1,4 +1,4 @@
-package com.aldaviva.autorpg.data.persistence.types;
+package com.aldaviva.autorpg.data.types;
 
 import java.io.Serializable;
 import java.util.ArrayList;

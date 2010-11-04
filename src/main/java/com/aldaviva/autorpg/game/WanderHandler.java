@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import com.aldaviva.autorpg.data.entities.Character;
-import com.aldaviva.autorpg.data.persistence.types.MapPoint;
+import com.aldaviva.autorpg.data.types.MapPoint;
 
 @Configurable
 class WanderHandler implements CharacterProgressHandler {

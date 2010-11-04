@@ -1,5 +1,6 @@
 package com.aldaviva.autorpg.game.events;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,8 +9,9 @@ import com.aldaviva.autorpg.AutoRPGException.NotEnoughPlayersError;
 import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.entities.Handofgod;
-import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.bulletin.Message;
+import com.aldaviva.autorpg.display.bulletin.Style;
 
 public class HandofGodEvent extends RandomEvent {
 
@@ -20,7 +22,7 @@ public class HandofGodEvent extends RandomEvent {
 	private int reward;
 
 	protected String getOperator() {
-		return handofgod.getBeneficial() ? "gains" : "loses";
+		return handofgod.getBeneficial() ? "is boosted by" : "is depleted by";
 	}
 
 	@Transactional
@@ -46,9 +48,9 @@ public class HandofGodEvent extends RandomEvent {
 
 //		.append("Hand Of God: ")
 
-		.append(handofgod.getDescription().replace("${player}", target.getName())).append(" ")
+		.append(handofgod.getDescription().replace("${player}", Style.CHARACTER_NAME+target.getName()+Style.NORMAL)).append(" ")
 
-		.append(Message.HANDOFGOD_REWARD.fillIn("player", target.getName(), "operator", getOperator(), "reward", String.valueOf(Math.abs(reward))));
+		.append(Message.HANDOFGOD_REWARD.fillIn("pronoun", StringUtils.capitalize(target.getPossessivePronoun()), "operator", getOperator(), "reward", String.valueOf(Math.abs(reward))));
 
 		return buf.toString();
 	}

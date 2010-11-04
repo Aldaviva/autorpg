@@ -1,4 +1,4 @@
-package com.aldaviva.autorpg.data.persistence.types;
+package com.aldaviva.autorpg.data.types;
 
 public class MapPoint extends Pair<Integer> {
 

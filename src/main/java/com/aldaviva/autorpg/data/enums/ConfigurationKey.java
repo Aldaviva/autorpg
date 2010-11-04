@@ -1,4 +1,4 @@
-package com.aldaviva.autorpg.data.persistence.enums;
+package com.aldaviva.autorpg.data.enums;
 
 import java.util.HashMap;
 import java.util.Map;

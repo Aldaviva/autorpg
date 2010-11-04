@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 
 import com.aldaviva.autorpg.AutoRPGException;
 import com.aldaviva.autorpg.data.entities.Configuration;
-import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.irc.IrcMessage;
 import com.aldaviva.autorpg.game.PlayerManager;
 

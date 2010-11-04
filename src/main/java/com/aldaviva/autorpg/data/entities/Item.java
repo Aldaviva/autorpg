@@ -18,13 +18,13 @@ import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 
-import com.aldaviva.autorpg.data.persistence.enums.ItemArticle;
-import com.aldaviva.autorpg.data.persistence.enums.ItemSlot;
+import com.aldaviva.autorpg.data.enums.ItemArticle;
+import com.aldaviva.autorpg.data.enums.ItemSlot;
 
 @RooJavaBean
 @RooToString
 @Entity
-@RooEntity(identifierField = "name", identifierType = String.class)
+@RooEntity(identifierField = "name")
 public class Item {
 
     @Id
@@ -37,7 +37,6 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemSlot slot;
 
-//    @ManyToMany(mappedBy = "items", fetch = FetchType.EAGER)
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "items")
     private Set<com.aldaviva.autorpg.data.entities.Character> characters = new HashSet<com.aldaviva.autorpg.data.entities.Character>();
 

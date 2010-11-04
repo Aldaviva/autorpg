@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.aldaviva.autorpg.AutoRPGException;
 import com.aldaviva.autorpg.data.entities.Configuration;
-import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.bulletin.Bulletin;
 import com.aldaviva.autorpg.display.bulletin.BulletinHandler;
 import com.aldaviva.autorpg.game.PlayerManager;

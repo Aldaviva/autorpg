@@ -4,8 +4,6 @@ import org.jibble.pircbot.Colors;
 
 public class Bulletin {
 	
-	private static final String STRIP_FORMATTING_REGEX = "["+Colors.BOLD+Colors.UNDERLINE+Colors.NORMAL+"]";
-	
 	private StringBuilder builder = new StringBuilder();
 	
 	public Bulletin(String str){
@@ -33,7 +31,7 @@ public class Bulletin {
 	}
 	
 	public String toStringStripFormatting(){
-		return toString().replaceAll(STRIP_FORMATTING_REGEX, "");
+		return Colors.removeFormattingAndColors(toString());
 	}
 	
 	

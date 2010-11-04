@@ -1,4 +1,4 @@
-package com.aldaviva.autorpg.data.persistence.enums;
+package com.aldaviva.autorpg.data.enums;
 
 public enum ItemSlot {
 	HEAD("on"),

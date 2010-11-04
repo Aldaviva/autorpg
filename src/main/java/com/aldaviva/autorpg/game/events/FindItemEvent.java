@@ -10,7 +10,7 @@ import com.aldaviva.autorpg.Utils;
 import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.entities.Item;
-import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.bulletin.Message;
 import com.aldaviva.autorpg.display.bulletin.Style;
 import com.aldaviva.autorpg.game.CharacterItemManager;

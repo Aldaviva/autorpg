@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aldaviva.autorpg.AutoRPGException;
 import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.entities.Player;
-import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.irc.IrcMessage;
 
 @Configurable

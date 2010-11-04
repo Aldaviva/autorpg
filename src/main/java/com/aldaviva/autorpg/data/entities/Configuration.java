@@ -17,7 +17,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 
 import com.aldaviva.autorpg.RehashListener;
-import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 
 @RooJavaBean
 @RooToString
@@ -47,17 +47,6 @@ public class Configuration {
     	LOGGER.debug("Asking for configuration value of "+key);
     	
     	Configuration configuration = Configuration.findConfiguration(key);
-    	
-    	/*if(configuration == null){
-    		
-    		LOGGER.debug("Config empty, setting to default value");
-    		
-    		configuration = new Configuration();
-    		configuration.setKey(key);
-    		configuration.setValue(key.getDefaultValue());
-    		configuration.persist();
-//    		rehash();
-    	}*/
     	
     	if(configuration != null){
 	    	LOGGER.debug("Returning "+configuration.getValue());

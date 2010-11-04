@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.aldaviva.autorpg.data.entities.Configuration;
-import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
-import com.aldaviva.autorpg.data.persistence.types.MapPoint;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
+import com.aldaviva.autorpg.data.types.MapPoint;
 
 @Component
 public class RealmMap {

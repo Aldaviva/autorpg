@@ -11,7 +11,7 @@ import twitter4j.http.AccessToken;
 import com.aldaviva.autorpg.RehashListener;
 import com.aldaviva.autorpg.AutoRPGException.ConfigurationIncompleteError;
 import com.aldaviva.autorpg.data.entities.Configuration;
-import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.bulletin.Bulletin;
 import com.aldaviva.autorpg.display.bulletin.BulletinHandler;
 

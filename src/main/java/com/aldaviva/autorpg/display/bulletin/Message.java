@@ -2,9 +2,9 @@ package com.aldaviva.autorpg.display.bulletin;
 
 public enum Message {
 	
-	CHARACTER_FOUND_ITEM(Style.CHARACTER_NAME + "${character.name}" + Style.NORMAL + " has found ${itemStyle} ${item.article} + ${item.name}" + Style.NORMAL + "."),
-	HANDOFGOD_REWARD("${player} ${operator} ${reward} experience."),
-	CHARACTER_LEVELS_UP("${character.name} has reached Level ${character.level}.");
+	CHARACTER_FOUND_ITEM(Style.CHARACTER_NAME + "${character.name}" + Style.NORMAL + " has found ${item.article}${itemStyle}${item.name}" + Style.NORMAL + "."),
+	HANDOFGOD_REWARD("${pronoun} experience ${operator} ${reward}."),
+	CHARACTER_LEVELS_UP(Style.CHARACTER_NAME + "${character.name}"+Style.NORMAL +" has reached Level ${character.level}.");
 	
 	private String message;
 	

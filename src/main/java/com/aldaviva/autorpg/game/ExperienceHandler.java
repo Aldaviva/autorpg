@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 
 import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.data.entities.Configuration;
-import com.aldaviva.autorpg.data.persistence.enums.ConfigurationKey;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.bulletin.Bulletin;
 import com.aldaviva.autorpg.display.bulletin.BulletinManager;
 import com.aldaviva.autorpg.display.bulletin.Message;

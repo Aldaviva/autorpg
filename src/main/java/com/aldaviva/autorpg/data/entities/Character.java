@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -15,15 +14,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
-
 import com.aldaviva.autorpg.AutoRPGException;
 import com.aldaviva.autorpg.AutoRPGException.NotEnoughPlayersError;
 import com.aldaviva.autorpg.data.types.MapPoint;
+import com.aldaviva.autorpg.data.entities.Quest;
 
 @RooJavaBean
 @RooToString
@@ -58,7 +56,7 @@ public class Character {
 
     @NotNull
     private Boolean female;
-    
+
     @ManyToOne
     private Quest quest;
 

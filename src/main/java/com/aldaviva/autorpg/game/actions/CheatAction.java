@@ -8,20 +8,33 @@ import com.aldaviva.autorpg.data.entities.Player;
 import com.aldaviva.autorpg.game.RandomEventManager;
 
 @Configurable
-public class HandofGodAction implements PlayerAction {
+public class CheatAction implements PlayerAction {
 
 	@Autowired
 	private RandomEventManager randomEventManager;
 
 	@Override
 	public String perform(String sender, String userhost, String[] argv, String argsExceptFirst) throws AutoRPGException {
+		
 		Player player = Player.findByOnlineAndUserhost(userhost);
-		if(player != null && player.getSuperuser()){
-			
+		if(player == null || !player.getSuperuser()){
+			return "Cheats require superuser privileges.";
+		}
+		
+		String cheatCommand = argv[1];
+		
+		if(cheatCommand.equalsIgnoreCase("finditem")){
+			randomEventManager.force(1);
+			return "Giving someone an item...";
+		} else if(cheatCommand.equalsIgnoreCase("handofgod")){
 			randomEventManager.force(0);
 			return "Triggering Hand of God...";
+		} else if(cheatCommand.equalsIgnoreCase("startquest")){
+			randomEventManager.force(2);
+			return "Starting a quest...";
+		} else {
+			return "Cheat "+cheatCommand+" unrecognized.";
 		}
-		return "Cheats require superuser privileges.";
 	}
 
 	@Override

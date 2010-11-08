@@ -11,7 +11,7 @@ import com.aldaviva.autorpg.data.entities.Character;
 import com.aldaviva.autorpg.data.entities.Player;
 
 @Component
-public class ProgressUpdater {
+public class ProgressUpdater implements PeriodicUpdater {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProgressUpdater.class);
 

@@ -15,6 +15,9 @@ public class Bulletin {
 	}
 	
 	public void add(String str){
+		if(builder.length() != 0){
+			builder.append(" ");
+		}
 		builder.append(str);
 	}
 	

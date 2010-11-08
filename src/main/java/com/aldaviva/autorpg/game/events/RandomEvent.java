@@ -33,7 +33,7 @@ public abstract class RandomEvent {
 		int timesPerDay = getTimesPerDay();
 		int randomInt = Utils.getRandomInt(1, rollsPerDay);
 		
-		LOGGER.debug("Rolled a "+randomInt+" out of "+rollsPerDay+". For this event, a roll <= "+timesPerDay+" is required.");
+		LOGGER.trace("Rolled a "+randomInt+" out of "+rollsPerDay+". For this event, a roll <= "+timesPerDay+" is required.");
 		
 		if (randomInt <= timesPerDay) {
 			occur();
@@ -43,7 +43,10 @@ public abstract class RandomEvent {
 	
 	public final void forceOccur(){
 		occur();
-		bulletinManager.publish(new Bulletin(getAnnouncement()));
+		String announcement = getAnnouncement();
+		if(announcement != null && !announcement.isEmpty()){
+			bulletinManager.publish(new Bulletin(announcement));
+		}
 	}
 
 }

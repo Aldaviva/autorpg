@@ -78,15 +78,15 @@ public enum IrcPlayerAction implements PlayerAction {
 		),
 		
 	/* Cheats */
-	FINDITEM(
-		new FindItemAction(),
-		"FINDITEM"
-		),
-		
-	HANDOFGOD(
-		new HandofGodAction(),
-		"HANDOFGOD"
-		);
+	CHEAT(
+		new CheatAction(),
+		new LinkedHashMap<String, String>(){
+			private static final long serialVersionUID = 1L;
+			{
+				put("command", "Which cheat to use.");
+			}},
+		new String[]{"CHEAT finditem", "CHEAT handofgod", "CHEAT startquest"}
+	);
 
 	private PlayerAction action;
 	private LinkedHashMap<String, String> arguments;

@@ -15,16 +15,15 @@ public class GameState {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GameState.class);
 	
 	@Autowired
-	public ProgressUpdater progressUpdater;
+	public PeriodicUpdater progressUpdater;
 	
 	@Autowired
-	public RealmMap worldMap;
+	private PeriodicUpdater randomEventManager;
 	
 	@Autowired
-	private RandomEventManager randomEventManager;
-
+	private PeriodicUpdater questManager;
+	
 	private static Integer tickInterval; //seconds
-
 
 	public void init(){
 		LOGGER.debug("Initializing Game State.");
@@ -56,6 +55,7 @@ public class GameState {
 	public void update(){
 		progressUpdater.update();
 		randomEventManager.update();
+		questManager.update();
 	}
 
 }

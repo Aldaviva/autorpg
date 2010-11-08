@@ -2,6 +2,7 @@ package com.aldaviva.autorpg.game.events;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +21,8 @@ public class FindItemEvent extends RandomEvent {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(HandofGodEvent.class);
 
+	@Autowired
 	private CharacterItemManager characterItemManager;
-	
-	public FindItemEvent(CharacterItemManager characterItemManager) {
-		this.characterItemManager = characterItemManager;
-	}
 
 	private Character character;
 	private Item newItem;

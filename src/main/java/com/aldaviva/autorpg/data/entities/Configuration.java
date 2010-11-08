@@ -44,12 +44,12 @@ public class Configuration {
     }
     
     public static String getValue(ConfigurationKey key){
-    	LOGGER.debug("Asking for configuration value of "+key);
+    	LOGGER.trace("Asking for configuration value of "+key);
     	
     	Configuration configuration = Configuration.findConfiguration(key);
     	
     	if(configuration != null){
-	    	LOGGER.debug("Returning "+configuration.getValue());
+	    	LOGGER.trace("Returning "+configuration.getValue());
 	    	return configuration.getValue();
     	} else {
     		return null;

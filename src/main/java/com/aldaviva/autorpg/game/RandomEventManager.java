@@ -5,28 +5,26 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.aldaviva.autorpg.game.events.FindItemEvent;
 import com.aldaviva.autorpg.game.events.HandofGodEvent;
+import com.aldaviva.autorpg.game.events.QuestStartEvent;
 import com.aldaviva.autorpg.game.events.RandomEvent;
 
 @Component
-public class RandomEventManager {
+public class RandomEventManager implements PeriodicUpdater {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RandomEventManager.class);
 
 	private List<RandomEvent> randomEvents = new ArrayList<RandomEvent>();
 
-	@Autowired
-	private CharacterItemManager characterItemManager;
-	
 	public void init() {
 		LOGGER.debug("Initializing Random Event Manager.");
 
 		randomEvents.add(new HandofGodEvent());
-		randomEvents.add(new FindItemEvent(characterItemManager));
+		randomEvents.add(new FindItemEvent());
+		randomEvents.add(new QuestStartEvent());
 	}
 	
 	public void force(int i){

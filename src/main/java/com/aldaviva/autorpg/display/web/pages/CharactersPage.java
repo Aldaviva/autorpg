@@ -1,8 +1,10 @@
 package com.aldaviva.autorpg.display.web.pages;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
@@ -16,22 +18,44 @@ import com.aldaviva.autorpg.data.entities.Item;
 public class CharactersPage extends BasePage {
 
 	public CharactersPage(){
-		super(new Model<String>("Characters")); //TODO use properties file
-		addCss();
+		super();
+		addPageSpecificCss();
 		
-		List<Character> characters = Character.findAllCharacters();
+		List<Character> characters = Character.findAllCharactersOrderByOnlineAndExperience();
 		
 		PropertyListView<Character> characterList = new PropertyListView<Character>("character", characters) {
 			
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem<Character> item) {
+			protected void populateItem(final ListItem<Character> item) {
 				item.add(new Label("name"));
 				item.add(new Label("level"));
 				item.add(new Label("designation"));
-				item.add(new Label("experience"));
+				Model<String> experienceModel = new Model<String>(){
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public String getObject() {
+						return NumberFormat.getInstance().format(item.getModelObject().getExperience());
+					}
+				};
+				item.add(new Label("experience", experienceModel));
 				
+				
+				WebMarkupContainer experienceProgress = new WebMarkupContainer("experienceProgress");
+				experienceProgress.setRenderBodyOnly(false);
+				experienceProgress.add(new AttributeAppender("style", true, new Model<String>(){
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public String getObject() {
+						double percent = item.getModelObject().getProgressTowardsNextLevel();
+						String width = NumberFormat.getPercentInstance().format(percent);
+						return "width: "+width+";";
+					}
+				}, " "));
+				item.add(experienceProgress);
 				
 				RepeatingView itemRepeatingView = new RepeatingView("item");
 				for(Item i : item.getModelObject().getItems()){

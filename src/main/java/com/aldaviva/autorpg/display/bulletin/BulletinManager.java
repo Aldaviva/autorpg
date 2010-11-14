@@ -3,6 +3,7 @@ package com.aldaviva.autorpg.display.bulletin;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jibble.pircbot.Colors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,14 @@ public class BulletinManager {
 			LOGGER.info(bulletin.toStringStripFormatting());
 		}
 		
+	}
+	
+	public static void main(String[] args){
+		String formattedMessage = Colors.BOLD+"a";
+		Bulletin formattedBulletin = new Bulletin();
+		formattedBulletin.add(formattedMessage);
+		System.out.println("formatted: "+formattedBulletin.toString());
+		System.out.println("unformatted: "+formattedBulletin.toStringStripFormatting());
 	}
 	
 }

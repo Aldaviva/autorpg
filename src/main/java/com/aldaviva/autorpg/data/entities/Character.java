@@ -1,5 +1,6 @@
 package com.aldaviva.autorpg.data.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -22,14 +23,17 @@ import com.aldaviva.autorpg.AutoRPGException;
 import com.aldaviva.autorpg.AutoRPGException.NotEnoughPlayersError;
 import com.aldaviva.autorpg.data.types.MapPoint;
 import com.aldaviva.autorpg.data.entities.Quest;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 
 @RooJavaBean
 @RooToString
 @Entity
 @RooEntity(finders = { "findCharactersByPlayer" })
-public class Character {
+public class Character implements Serializable {
 
-    @Id
+    private static final long serialVersionUID = 1L;
+
+	@Id
     private String name;
 
     @NotNull
@@ -75,6 +79,12 @@ public class Character {
             return "his";
         }
     }
+    
+    public static List<Character> findAllCharactersOrderByOnlineAndExperience(){
+    	 EntityManager em = entityManager();
+         TypedQuery<Character> q = em.createQuery("SELECT Character FROM Character AS character ORDER BY character.player.online DESC, character.level DESC, character.experience DESC", Character.class);
+         return q.getResultList();
+    }
 
     public static List<Character> findRandomByOnline(int number) throws NotEnoughPlayersError {
         EntityManager em = entityManager();
@@ -86,4 +96,38 @@ public class Character {
         }
         return resultList;
     }
+    
+    /**
+	 * This may be different from getLevel() if a level was just gained
+	 * You can never lose a level
+	 */
+	public int calculateLevelFromExperience() {
+		return Math.max(getLevel(), 1 + (int) Math.floor(getMult() * Math.pow(getExperience(), getPower())));
+	}
+	
+	public int calculateExperienceFromLevel(int goalLevel){
+		return (int) Math.ceil(Math.pow(goalLevel/getMult(), 1/getPower()));
+	}
+	
+	public double getProgressTowardsNextLevel(){
+		int experience = getExperience();
+		int goalExperience = calculateExperienceFromLevel(getLevel()+1);
+		return (double) experience/goalExperience;
+	}
+
+	private double getMult() {
+		return getLevelCap()/Math.pow(getSecondsToLevelCap(), getPower());
+	}
+
+	private double getPower() {
+		return Double.parseDouble(Configuration.getValue(ConfigurationKey.LEVEL_CURVE));
+	}
+
+	private int getSecondsToLevelCap() {
+		return Integer.parseInt(Configuration.getValue(ConfigurationKey.SECONDS_TO_LEVEL_CAP));
+	}
+	
+	private int getLevelCap(){
+		return Integer.parseInt(Configuration.getValue(ConfigurationKey.LEVEL_CAP));
+	}
 }

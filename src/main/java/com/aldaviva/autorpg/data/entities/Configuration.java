@@ -1,5 +1,6 @@
 package com.aldaviva.autorpg.data.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +24,11 @@ import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 @RooToString
 @Entity
 @RooEntity
-public class Configuration {
+public class Configuration implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 	
 

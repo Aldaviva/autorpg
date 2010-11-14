@@ -30,7 +30,8 @@ public enum ConfigurationKey {
 	TWITTER_OAUTH_TOKEN(""),
 	TWITTER_OAUTH_TOKEN_SECRET(""),
 	TWITTER_CONSUMER_KEY(""),
-	TWITTER_CONSUMER_SECRET("");
+	TWITTER_CONSUMER_SECRET(""),
+	TWITTER_URL("http://twitter.com/#!/autorpg");
 
 	
 	private static final Map<String, ConfigurationKey> stringMap = new HashMap<String, ConfigurationKey>();

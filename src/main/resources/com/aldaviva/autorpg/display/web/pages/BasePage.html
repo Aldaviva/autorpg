@@ -7,7 +7,13 @@
 	</head>
 	 
 	<body>
-		<h1>IdleRPG</h1>
-		<wicket:child />	
+		<div class="navigationColumn">
+			<h1><a wicket:id="logo">AutoRPG</a></h1>
+			<wicket:enclosure wicket:id="navigation"></wicket:enclosure>
+		</div>
+		
+		<div class="page">
+			<wicket:child />
+		</div>
 	</body>
 </html>

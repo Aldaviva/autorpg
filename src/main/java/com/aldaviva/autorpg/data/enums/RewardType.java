@@ -2,6 +2,6 @@ package com.aldaviva.autorpg.data.enums;
 
 public enum RewardType {
 	
-	EXPERIENCE, ITEM, RARE_ITEM;
+	EXPERIENCE, RARE_ITEM;
 	
 }

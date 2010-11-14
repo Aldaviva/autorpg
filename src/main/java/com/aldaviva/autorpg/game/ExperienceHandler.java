@@ -6,14 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import com.aldaviva.autorpg.data.entities.Character;
-import com.aldaviva.autorpg.data.entities.Configuration;
-import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.bulletin.Bulletin;
 import com.aldaviva.autorpg.display.bulletin.BulletinManager;
 import com.aldaviva.autorpg.display.bulletin.Message;
 
 @Configurable
-class ExperienceHandler implements CharacterProgressHandler {
+public class ExperienceHandler implements CharacterProgressHandler {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExperienceHandler.class);
 	
@@ -30,7 +28,7 @@ class ExperienceHandler implements CharacterProgressHandler {
 
 		LOGGER.debug(character.getName() + " has " + character.getExperience() + " experience.");
 
-		int level = calculateLevelFromExperience(character);
+		int level = character.calculateLevelFromExperience();
 		if (level != character.getLevel()) {
 			character.setLevel(level);
 			onLevelUp(character);
@@ -42,20 +40,6 @@ class ExperienceHandler implements CharacterProgressHandler {
 		bulletinManager.publish(bulletin);
 	}
 	
-	/**
-	 * This may be different from getExperience() if a level was just gained
-	 * You can never lose a level
-	 */
-	public int calculateLevelFromExperience(Character character) {
-		int levelCap = Integer.parseInt(Configuration.getValue(ConfigurationKey.LEVEL_CAP));
-		int secondsToLevelCap = Integer.parseInt(Configuration.getValue(ConfigurationKey.SECONDS_TO_LEVEL_CAP));
-		double power = Double.parseDouble(Configuration.getValue(ConfigurationKey.LEVEL_CURVE));
-		
-		int currentLevel = character.getLevel();
-		int currentExperience = character.getExperience();
-		
-		double mult = levelCap/Math.pow(secondsToLevelCap, power);
-		return Math.max(currentLevel, 1 + (int) Math.floor(mult * Math.pow(currentExperience, power)));
-	}
+	
 
 }

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aldaviva.autorpg.AutoRPGException.NotEnoughPlayersError;
+import com.aldaviva.autorpg.Utils;
 import com.aldaviva.autorpg.data.entities.Character;
+import com.aldaviva.autorpg.data.entities.Item;
 import com.aldaviva.autorpg.data.entities.Quest;
 import com.aldaviva.autorpg.display.bulletin.Bulletin;
 import com.aldaviva.autorpg.display.bulletin.BulletinManager;
@@ -26,6 +29,9 @@ public class QuestManager implements PeriodicUpdater {
 	@Autowired
 	private BulletinManager bulletinManager;
 	
+	@Autowired
+	private CharacterItemManager characterItemManager;
+	
 	@Transactional
 	public Quest start(){
 		try {
@@ -36,8 +42,6 @@ public class QuestManager implements PeriodicUpdater {
 			for(Character character : quest.getCharacters()){
 				character.setQuest(quest);
 			}
-			LOGGER.debug("getCharacters: "+quest.getCharacters());
-			LOGGER.debug("character.getQuest: "+characters.get(0).getQuest());
 			quest.setExpRemaining(quest.getExpTotal());
 			quest.setStep(1);
 			stepReached(quest);
@@ -57,7 +61,7 @@ public class QuestManager implements PeriodicUpdater {
 	@Transactional
 	public void update(){
 		List<Quest> quests = Quest.findByActive();
-		LOGGER.debug("Updating "+quests.size()+" quests.");
+//		LOGGER.debug("Updating "+quests.size()+" quests.");
 		for(Quest quest : quests){
 			updateQuest(quest);
 			quest.merge();
@@ -70,7 +74,7 @@ public class QuestManager implements PeriodicUpdater {
 			remove(quest);
 			bulletinManager.publish(new Bulletin("Every character in this quest is offline. Quest over."));
 		} else {
-			LOGGER.debug("Updating quest progress ("+onlineCharacters+" of its characters are online)");
+//			LOGGER.debug("Updating quest progress ("+onlineCharacters+" of its characters are online)");
 			int experienceDelta = (onlineCharacters * onlineCharacters);
 			quest.setExpRemaining(quest.getExpRemaining() - experienceDelta);
 			
@@ -104,11 +108,41 @@ public class QuestManager implements PeriodicUpdater {
 				break;
 			case 4: //done
 				result.add(quest.getStep3done());
+				giveReward(quest);
 				remove(quest);
 				break;
 		}
 		
 		return result;
+	}
+	
+	private Bulletin giveReward(Quest quest){
+		
+		switch(quest.getReward()){
+		case EXPERIENCE:
+			SummaryStatistics stats = new SummaryStatistics();
+			for(Character character : quest.getCharacters()){
+				stats.addValue(character.getExperience());
+			}
+			
+			double avgTeamExperience = stats.getMean();
+			int reward = (int) Math.round(avgTeamExperience * (Utils.getRandomInt(10, 25)/100));
+			
+			for(Character character : quest.getCharacters()){
+				character.setExperience(character.getExperience() + reward);
+			}
+			return new Bulletin("Each character gains "+reward+" experience.");
+			
+		case RARE_ITEM:
+			for(Character character : quest.getCharacters()){
+				Item newItem = Item.findRandomByRarity(true);
+				characterItemManager.offerCharacterAnItem(newItem, character);
+			}
+			return new Bulletin("The adventurers have uncovered a treasure chest.");
+			
+		default:
+			throw new IllegalStateException("Quest reward must be EXPERIENCE or RARE_ITEM.");
+		}
 	}
 	
 	private void remove(Quest quest){

@@ -117,14 +117,14 @@ public class Bot extends PircBot implements BulletinHandler {
 	protected void onServerResponse(int code, String response) {
 		switch(code){
 		case RPL_WHOREPLY:
-			LOGGER.debug("who reply: "+response);
+//			LOGGER.debug("who reply: "+response);
 			String[] splitResponse = StringUtils.split(response);
 			String host = splitResponse[3];
 			String nick = splitResponse[5];
 			userhosts.add(nick + '@' + host);
 			break;
 		case RPL_ENDOFWHO:
-			LOGGER.debug("end of /who");
+//			LOGGER.debug("end of /who");
 			playerManager.enforcePlayersOnlineState(userhosts);
 			userhosts.clear();
 			break;

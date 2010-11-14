@@ -1,5 +1,7 @@
 package com.aldaviva.autorpg.data.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.Transient;
@@ -17,9 +19,11 @@ import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 @RooToString
 @Entity
 @RooEntity
-public class Handofgod {
+public class Handofgod implements Serializable {
 
-    @NotNull
+    private static final long serialVersionUID = 1L;
+
+	@NotNull
     private String description;
 
     @NotNull

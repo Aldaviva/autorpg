@@ -10,13 +10,17 @@
 			<div class="characters">
 				<div class="character" wicket:id="character">
 					<h3 wicket:id="name"></h3>
-					<div class="level">Level <span wicket:id="level"></span></div>
-					<div class="designation" wicket:id="designation"></div>
-					<div class="experience"><span wicket:id="experience"></span> experience</div>
-					<div class="items">
-						<ul>
-							<li wicket:id="item"></li>
-						</ul>
+					<div class="content">
+						<div class="designation" wicket:id="designation"></div>
+						<div class="level"><wicket:message key="level"><span class="number" wicket:id="level"></span></wicket:message></div>
+						<div class="progress"><div wicket:id="experienceProgress" class="progressComplete"></div></div>
+						<div class="experience"><wicket:message key="experience"><span class="number" wicket:id="experience"></span></wicket:message></div>
+						<div class="items">
+							<h4><wicket:message key="items" /></h4>
+							<ul>
+								<li wicket:id="item"></li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>

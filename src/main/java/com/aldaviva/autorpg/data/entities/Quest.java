@@ -1,5 +1,6 @@
 package com.aldaviva.autorpg.data.entities;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,9 +26,11 @@ import com.aldaviva.autorpg.data.enums.RewardType;
 @RooToString
 @Entity
 @RooEntity(identifierField = "name", identifierType = java.lang.String.class)
-public class Quest {
+public class Quest implements Serializable {
 
-    private static final int STEPS = 3;
+    private static final long serialVersionUID = 1L;
+
+	private static final int STEPS = 3;
     
     public static final int CHARACTERS_PER_QUEST = 4;
 

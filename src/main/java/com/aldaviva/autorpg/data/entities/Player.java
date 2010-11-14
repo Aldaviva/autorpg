@@ -1,5 +1,6 @@
 package com.aldaviva.autorpg.data.entities;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,9 +17,11 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @Entity
 @RooEntity(finders = { "findPlayersByUserhost" })
-public class Player {
+public class Player implements Serializable {
 
-    @Id
+    private static final long serialVersionUID = 1L;
+
+	@Id
     private String name;
 
     @Column(unique = true)

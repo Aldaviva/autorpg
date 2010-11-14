@@ -1,5 +1,6 @@
 package com.aldaviva.autorpg.data.entities;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,9 +26,11 @@ import com.aldaviva.autorpg.data.enums.ItemSlot;
 @RooToString
 @Entity
 @RooEntity(identifierField = "name")
-public class Item {
+public class Item implements Serializable {
 
-    @Id
+    private static final long serialVersionUID = 1L;
+
+	@Id
     private String name;
 
     @NotNull

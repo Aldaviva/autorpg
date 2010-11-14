@@ -5,7 +5,6 @@ public enum ItemSlot {
 	HAND("in", 2),
 	BELT("on"),
 	TORSO("around"),
-	FEET("on"),
 	LEGS("on"),
 	AMULET("as");
 

@@ -1,0 +1,12 @@
+.map {
+	position: relative;
+}
+
+.map .character {
+	position: absolute;
+	background-color: black;
+	
+	font-size: 0.7em;
+	padding: 2px 3px;
+	text-transform: uppercase;
+}

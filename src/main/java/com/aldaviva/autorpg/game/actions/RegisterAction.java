@@ -4,8 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import com.aldaviva.autorpg.AutoRPGException;
-import com.aldaviva.autorpg.data.entities.Configuration;
-import com.aldaviva.autorpg.data.enums.ConfigurationKey;
+import com.aldaviva.autorpg.data.entities.Player;
 import com.aldaviva.autorpg.display.irc.IrcMessage;
 import com.aldaviva.autorpg.game.PlayerManager;
 
@@ -19,9 +18,9 @@ public class RegisterAction implements PlayerAction {
 	public String perform(String sender, String userhost, String[] argv, String argsExceptFirstArg) throws AutoRPGException {
 		String playerName = argv[1];
 		String password = argsExceptFirstArg;
-		playerManager.register(userhost, playerName, password);
-		return IrcMessage.REGISTERED_SUCCESS.fillIn("playerName", playerName) + "\n"
-			+ IrcMessage.CREATE_HINT.fillIn("botNickname", Configuration.getValue(ConfigurationKey.BOT_NICKNAME));
+		Player newPlayer = playerManager.register(userhost, playerName, password);
+		return new IrcMessage.RegisteredPlayerSuccessfully(newPlayer) + "\n"
+			+ new IrcMessage.CreateCharacterHint().toString();
 	}
 
 	@Override

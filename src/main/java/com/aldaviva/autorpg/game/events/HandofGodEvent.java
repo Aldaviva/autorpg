@@ -1,6 +1,5 @@
 package com.aldaviva.autorpg.game.events;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,11 +45,9 @@ public class HandofGodEvent extends RandomEvent {
 	public String getAnnouncement() {
 		StringBuilder buf = new StringBuilder()
 
-//		.append("Hand Of God: ")
-
 		.append(handofgod.getDescription().replace("${player}", Style.CHARACTER_NAME+target.getName()+Style.NORMAL)).append(" ")
 
-		.append(Message.HANDOFGOD_REWARD.fillIn("pronoun", StringUtils.capitalize(target.getPossessivePronoun()), "operator", getOperator(), "reward", String.valueOf(Math.abs(reward))));
+		.append(new Message.HandOfGodReward(target, getOperator(), Math.abs(reward)));
 
 		return buf.toString();
 	}

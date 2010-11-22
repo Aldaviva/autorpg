@@ -1,28 +1,69 @@
 package com.aldaviva.autorpg.display.bulletin;
 
-public enum Message {
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.aldaviva.autorpg.Utils;
+import com.aldaviva.autorpg.data.entities.Character;
+import com.aldaviva.autorpg.data.entities.Item;
+import com.aldaviva.autorpg.data.entities.Quest;
+
+public abstract class Message {
+
+	String message;
 	
-	CHARACTER_FOUND_ITEM(Style.CHARACTER_NAME + "${character.name}" + Style.NORMAL + " has found ${item.article}${itemStyle}${item.name}" + Style.NORMAL + "."),
-	HANDOFGOD_REWARD("${pronoun} experience ${operator} ${reward}."),
-	CHARACTER_LEVELS_UP(Style.CHARACTER_NAME + "${character.name}"+Style.NORMAL +" has reached Level ${character.level}."),
-	QUEST_HAS_CHARACTERS(Style.CHARACTER_NAME + "${characterA}" + Style.NORMAL+", "+Style.CHARACTER_NAME + "${characterB}" + Style.NORMAL+", "+Style.CHARACTER_NAME + "${characterC}" + Style.NORMAL+" and "+Style.CHARACTER_NAME + "${characterD}" + Style.NORMAL+" are on a quest.");
-	
-	private String message;
-	
-	private Message(final String message){
+	protected Message(String message){
 		this.message = message;
 	}
 	
-	public String fillIn(String... replacementPairs){
-		if(replacementPairs.length % 2 != 0){
-			throw new IllegalArgumentException("An even number of arguments is required.");
-		}
-		
-		String result = message;
-		for(int argNum=0; argNum < replacementPairs.length; argNum += 2){
-			result = result.replace("${"+replacementPairs[argNum]+"}", replacementPairs[argNum+1]);
-		}
-		
-		return result;
+	public String toString(){
+		return message;
 	}
+	
+	private static String getCommaSeparatedCharacterNames(Iterable<Character> characters){
+		List<String> characterNames = new ArrayList<String>();
+		for(Character character : characters){
+			characterNames.add(Style.CHARACTER_NAME+character.getName()+Style.NORMAL);
+		}
+		return Utils.commaAndList(characterNames);
+	}
+	
+	public static class CharacterFoundItem extends Message {
+		public CharacterFoundItem(Character character, Item item){
+			super(Style.CHARACTER_NAME + character.getName() + Style.NORMAL + " has found " + item.getArticle() + (item.getRare() ? Style.ITEM_RARE_NAME : Style.ITEM_NAME) + item.getName() + Style.NORMAL + " (level "+item.getLevel()+").");
+		}
+	}
+	
+	public static class HandOfGodReward extends Message {
+		public HandOfGodReward(Character character, String operator, int reward){
+			super(StringUtils.capitalize(character.getPossessivePronoun()) + " experience " + operator + " " +reward);
+		}
+	}
+	
+	public static class CharacterLevelsUp extends Message {
+		public CharacterLevelsUp(Character character){
+			super(Style.CHARACTER_NAME + character.getName() + Style.NORMAL +" has reached Level " + character.getLevel() + ".");
+		}
+	}
+	
+	public static class QuestHasCharacters extends Message {
+		public QuestHasCharacters(Quest quest){
+			super(getCommaSeparatedCharacterNames(quest.getCharacters()) + " are on a quest.");
+		}
+	}
+	
+	public static class CharactersFoundItems extends Message {
+		public CharactersFoundItems(Iterable<Character> characters){
+			super(getCommaSeparatedCharacterNames(characters) + " have found a treasure chest.");
+		}
+	}
+	
+	public static class CharactersAllGainExperience extends Message {
+		public CharactersAllGainExperience(Iterable<Character> characters, int experienceGain){
+			super(getCommaSeparatedCharacterNames(characters) + " each gain "+experienceGain + " experience.");
+		}
+	}
+	
 }

@@ -1,186 +1,202 @@
 package com.aldaviva.autorpg.display.irc;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.jibble.pircbot.Colors;
 
 import com.aldaviva.autorpg.AutoRPGException;
-import com.aldaviva.autorpg.game.actions.*;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
+import com.aldaviva.autorpg.game.actions.CharacterAction;
+import com.aldaviva.autorpg.game.actions.CheatAction;
+import com.aldaviva.autorpg.game.actions.ConfigAction;
+import com.aldaviva.autorpg.game.actions.CreateAction;
+import com.aldaviva.autorpg.game.actions.HelpAction;
+import com.aldaviva.autorpg.game.actions.LoginAction;
+import com.aldaviva.autorpg.game.actions.LogoutAction;
+import com.aldaviva.autorpg.game.actions.PlayerAction;
+import com.aldaviva.autorpg.game.actions.RegisterAction;
 
-public enum IrcPlayerAction implements PlayerAction {
+public abstract class IrcPlayerAction implements PlayerAction {
 
-	REGISTER(
-		new RegisterAction(),
-		new LinkedHashMap<String, String>() {
-			private static final long serialVersionUID = 1L;
-			{
-				put("player name", "Uniquely identifies you, the human player. Will not appear in-game.");
-				put("password", "Used to LOGIN with the IdleMaster. Stored with SHA256 hashing and salt.");
-			}},
-		"REGISTER Robert secretpassword"),
+	private Class<? extends PlayerAction> playerActionClass;
+	private List<String> argNames;
+	private List<String> argDescriptions;
+	private List<String> argExamples;
 	
-	CREATE(
-		new CreateAction(),
-		new LinkedHashMap<String, String>(){
-			private static final long serialVersionUID = 1L;
-			{
-				put("character name", "Your character's name as it will appear in-game.");
-				put("gender", "Female or Male");
-				put("designation", "The designation or class name of your choosing.");
-			}},
-		"CREATE Daemar Female Magical Girl"),
+	private static PlayerAction INSTANCE;
+	
+	private IrcPlayerAction(Class<? extends PlayerAction> playerActionClass, List<String> argNames, List<String> argDescriptions, List<String> argExamples) {
+		this.playerActionClass = playerActionClass;
 		
-	CHARACTER(
-		new CharacterAction(),
-		new LinkedHashMap<String, String>(){
-			private static final long serialVersionUID = 1L;
-			{
-				put("character name", "The name of the Character you wish to see information about.");
-			}},
-		"CHARACTER Daemar"
-		),
+		if(argNames.size() != argDescriptions.size() || argNames.size() != argExamples.size()){
+			throw new IllegalArgumentException("The names, descriptions, and examples of IrcPlayerAction arguments must all have the same number of items.");
+		}
 		
-	CONFIG(
-		new ConfigAction(),
-		new LinkedHashMap<String, String>(){
-			private static final long serialVersionUID = 1L;
-			{
-				put("parameter", "Game parameter.");
-				put("[value]", "Optional. If omitted, displays the current value. If specified, sets the parameter to the specified value.");
-			}},
-		0,
-		new String[]{"CONFIG map_width", "CONFIG map_width 250"}
-		),
-		
-	LOGIN(
-		new LoginAction(),
-		new LinkedHashMap<String, String>(){
-			private static final long serialVersionUID = 1L;
-			{
-				put("player name", "The player name you used with the REGISTER command.");
-				put("password", "The password you used with the REGISTER command.");
-			}},
-		"LOGIN Robert secretpassword"
-		),
-		
-	LOGOUT(
-		new LogoutAction(),
-		"LOGOUT"
-		),
+		this.argNames = argNames;
+		this.argDescriptions = argDescriptions;
+		this.argExamples = argExamples;
+	}
 	
-	HELP(
-		new HelpAction(),
-		"HELP"
-		),
-		
-	/* Cheats */
-	CHEAT(
-		new CheatAction(),
-		new LinkedHashMap<String, String>(){
-			private static final long serialVersionUID = 1L;
-			{
-				put("command", "Which cheat to use.");
-			}},
-		new String[]{"CHEAT finditem", "CHEAT handofgod", "CHEAT startquest"}
-	);
-
-	private PlayerAction action;
-	private LinkedHashMap<String, String> arguments;
-	private int numberOfRequiredArguments;
-	private String[] examples;
-
-	private IrcPlayerAction(PlayerAction action, LinkedHashMap<String, String> arguments, int numberOfRequiredArguments, String[] examples) {
-		this.action = action;
-		this.arguments = arguments;
-		this.numberOfRequiredArguments = numberOfRequiredArguments;
-		this.examples = examples;
+	private IrcPlayerAction(Class<? extends PlayerAction> playerActionClass){
+		this(playerActionClass, Collections.<String>emptyList(), Collections.<String>emptyList(), Collections.<String>emptyList());
+	}
+	
+	public String getName(){
+		return getClass().getSimpleName().toUpperCase();
 	}
 
-	private IrcPlayerAction(PlayerAction action, LinkedHashMap<String, String> arguments, int numberOfRequiredArguments, String example) {
-		this(action, arguments, numberOfRequiredArguments, new String[]{example});
-	}
-	
-	private IrcPlayerAction(PlayerAction action, LinkedHashMap<String, String> arguments, String example) {
-		this(action, arguments, arguments.size(), new String[]{example});
-	}
-	
-	private IrcPlayerAction(PlayerAction action, LinkedHashMap<String, String> arguments, String[] examples) {
-		this(action, arguments, arguments.size(), examples);
-	}
-	
-	private IrcPlayerAction(PlayerAction action, String example){
-		this(action, new LinkedHashMap<String, String>(), 0, new String[]{example});
+	public Class<? extends PlayerAction> getPlayerActionClass() {
+		return playerActionClass;
 	}
 
-	public LinkedHashMap<String, String> getArguments() {
-		return arguments;
+	public List<String> getArgNames() {
+		return argNames;
 	}
 
-	public String getCommand() {
-		return name();
+	public List<String> getArgDescriptions() {
+		return argDescriptions;
+	}
+
+	public List<String> getArgExamples() {
+		return argExamples;
 	}
 	
-	public String[] getExamples() {
-		return examples;
+	protected int getNumberOfRequiredArguments(){
+		return getArgNames().size();
 	}
 	
-	public PlayerAction getAction() {
-		return action;
+	private PlayerAction getInstance(){
+		if(INSTANCE == null){
+			try {
+				INSTANCE = getPlayerActionClass().newInstance();
+			} catch (InstantiationException e) {
+			} catch (IllegalAccessException e) {
+			}
+		}
+		return INSTANCE;
 	}
 	
-	public int getNumberOfArguments(){
-		return arguments.size();
+	public String getUsage(){
+		StringBuilder str = new StringBuilder(getSyntax());
+		str.append('\n'+Colors.NORMAL+getInstance().getDescription()+'\n');
+		//for (Entry<String, String> argumentPair : getArguments().entrySet()) {
+		for(int i=0; i<getArgNames().size(); i++){
+			str.append(Colors.BOLD+Colors.UNDERLINE+getArgNames().get(i));
+			str.append(Colors.NORMAL+" - "+getArgDescriptions().get(i)+'\n');
+		}
+		str.append("Example: "+Colors.RED + getName() + " " + StringUtils.join(getArgExamples(), " ") + Colors.NORMAL);
+		return str.toString();
 	}
 	
-	public int getNumberOfRequiredArguments(){
-		return numberOfRequiredArguments;
+	public String getSyntax(){
+		StringBuilder str = new StringBuilder(Colors.NORMAL + Colors.BOLD + getName() + Colors.NORMAL);
+		for (String argName : getArgNames()) {
+			str.append(' '+Colors.BOLD+Colors.UNDERLINE+argName+Colors.NORMAL);
+		}
+		return str.toString();
 	}
 	
 	@Override
-	public String getDescription() {
-		return getAction().getDescription();
-	}
-	
-
-	@Override
-	public String perform(String sender, String userhost, String[] argv, String argsExceptFirst) throws AutoRPGException {
-		return getAction().perform(sender, userhost, argv, argsExceptFirst);
+	public String perform(String sender, String userhost, String[] argv, String argsExceptFirstArg) throws AutoRPGException {
+		return getInstance().perform(sender, userhost, argv, argsExceptFirstArg);
 	}
 
 	@Override
 	public boolean isCheat() {
-		return getAction().isCheat();
+		return getInstance().isCheat();
+	}
+
+	@Override
+	public String getDescription() {
+		return getInstance().getDescription();
 	}
 	
-	public String usage(){
-		StringBuilder str = new StringBuilder(Colors.BOLD+getCommand().toUpperCase()+Colors.NORMAL);
-		for (String argument : getArguments().keySet()) {
-			str.append(' '+Colors.BOLD+Colors.UNDERLINE+argument+Colors.NORMAL);
+	public static List<IrcPlayerAction> getAllActions(){
+		Class<?>[] classes = IrcPlayerAction.class.getClasses();
+		List<IrcPlayerAction> result = new ArrayList<IrcPlayerAction>();
+		for (Class<?> clazz : classes) {
+			try {
+				result.add((IrcPlayerAction) clazz.newInstance());
+			} catch (InstantiationException e) {
+			} catch (IllegalAccessException e) {
+			}
 		}
-		str.append('\n'+Colors.NORMAL+getDescription()+'\n');
-		for (Entry<String, String> argumentPair : getArguments().entrySet()) {
-			str.append(Colors.BOLD+Colors.UNDERLINE+argumentPair.getKey());
-			str.append(Colors.NORMAL+" - "+argumentPair.getValue()+'\n');
-		}
-		str.append("Example: "+StringUtils.join(examples, "\n         "));
-		return str.toString();
-	}
-	
-	static final Map<String, IrcPlayerAction> map = new HashMap<String, IrcPlayerAction>();
-	
-	static {
-		for(IrcPlayerAction action : values()){
-			map.put(action.toString(), action);
-		}
-	}
-	
-	public static IrcPlayerAction getByName(String name){
-		IrcPlayerAction result = map.get(name.toUpperCase());
 		return result;
 	}
 
+	public static class Register extends IrcPlayerAction {
+		public Register(){
+			super(RegisterAction.class,
+				Arrays.<String>asList("player name", "password"),
+				Arrays.<String>asList("Uniquely identifies you, the human player. Will not appear in-game.", "Used to LOGIN with the IdleMaster. Stored with SHA256 hashing and salt."),
+				Arrays.<String>asList("Robert", "secretpassword"));
+		}
+	}
+	
+	public static class Create extends IrcPlayerAction {
+		public Create(){
+			super(CreateAction.class,
+				Arrays.<String>asList("character name", "gender", "designation"),
+				Arrays.<String>asList("Your character's name as it will appear in-game.", "Female or Male", "The designation or class name of your choosing."),
+				Arrays.<String>asList("Daemar", "Female", "Magical Girl"));
+		}
+	}
+	
+	public static class Character extends IrcPlayerAction {
+		public Character(){
+			super(CharacterAction.class,
+				Arrays.<String>asList("character name"),
+				Arrays.<String>asList("The name of the Character you wish to see information about."),
+				Arrays.<String>asList("Daemar"));
+		}
+	}
+	
+	public static class Config extends IrcPlayerAction {
+		public Config(){
+			super(ConfigAction.class,
+				Arrays.<String>asList("[parameter]", "[value]"),
+				Arrays.<String>asList("Leave blank to see the values of all parameters", "New value for the given parameter. Leave blank to see the value of the given parameter."),
+				Arrays.<String>asList(ConfigurationKey.values()[0].name(), "250"));
+		}
+
+		@Override
+		protected int getNumberOfRequiredArguments() {
+			return 0;
+		}
+	}
+	
+	public static class Login extends IrcPlayerAction {
+		public Login(){
+			super(LoginAction.class,
+				Arrays.<String>asList("player name", "password"),
+				Arrays.<String>asList("The player name you used with the REGISTER command.", "The password you used with the REGISTER command."),
+				Arrays.<String>asList("Robert", "secretpassword"));
+		}
+	}
+	
+	public static class Logout extends IrcPlayerAction {
+		public Logout(){
+			super(LogoutAction.class);
+		}
+	}
+	
+	public static class Help extends IrcPlayerAction {
+		public Help(){
+			super(HelpAction.class);
+		}
+	}
+	
+	public static class Cheat extends IrcPlayerAction {
+		public Cheat(){
+			super(CheatAction.class,
+				Arrays.<String>asList("code"),
+				Arrays.<String>asList("Which cheat code to use."),
+				Arrays.<String>asList("finditem"));
+		}
+	}
+	
 }

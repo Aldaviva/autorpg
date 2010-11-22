@@ -36,7 +36,7 @@ public class ExperienceHandler implements CharacterProgressHandler {
 	}
 	
 	private void onLevelUp(Character character){
-		Bulletin bulletin = new Bulletin(Message.CHARACTER_LEVELS_UP.fillIn("character.name", character.getName(), "character.level", String.valueOf(character.getLevel())));
+		Bulletin bulletin = new Bulletin(new Message.CharacterLevelsUp(character));
 		bulletinManager.publish(bulletin);
 	}
 	

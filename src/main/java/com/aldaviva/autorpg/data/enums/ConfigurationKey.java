@@ -7,6 +7,7 @@ public enum ConfigurationKey {
 
 	MAP_WIDTH("250"),
 	MAP_HEIGHT("250"),
+	MAP_IMAGE_URL(""),
 	SECONDS_TO_LEVEL_CAP("31556926"),
 	LEVEL_CAP("99"),
 	LEVEL_CURVE("0.4"),

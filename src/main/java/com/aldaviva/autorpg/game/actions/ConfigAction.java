@@ -34,7 +34,8 @@ public class ConfigAction implements PlayerAction {
 			} else {
 				String value = argsExceptFirst;
 				Configuration.findConfiguration(configurationKey).setValue(value);
-				return IrcMessage.CONFIG_SET.fillIn("type", configurationKey.name(), "value", value);
+				return new IrcMessage.ConfigSet(configurationKey, value).toString();
+//				return OldIrcMessage.CONFIG_SET.fillIn("type", configurationKey.name(), "value", value);
 			}
 		}
 		
@@ -43,7 +44,8 @@ public class ConfigAction implements PlayerAction {
 	
 	private String getSingleValue(ConfigurationKey configurationKey){
 		String value = Configuration.getValue(configurationKey);
-		return IrcMessage.CONFIG_GET.fillIn("type", configurationKey.name(), "value", value);
+		return new IrcMessage.ConfigGet(configurationKey, value).toString();
+//		return OldIrcMessage.CONFIG_GET.fillIn("type", configurationKey.name(), "value", value);
 	}
 
 	@Override

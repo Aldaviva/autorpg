@@ -13,7 +13,6 @@ import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.entities.Item;
 import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 import com.aldaviva.autorpg.display.bulletin.Message;
-import com.aldaviva.autorpg.display.bulletin.Style;
 import com.aldaviva.autorpg.game.CharacterItemManager;
 
 @Configurable
@@ -55,11 +54,10 @@ public class FindItemEvent extends RandomEvent {
 
 	@Override
 	public String getAnnouncement() {
-		String result = "";
-		String itemStyle = newItem.getRare() ? Style.ITEM_RARE_NAME : Style.ITEM_NAME;
 		if(keepingNewItem){
-			result = Message.CHARACTER_FOUND_ITEM.fillIn("character.name", character.getName(), "itemStyle", itemStyle, "item.article", newItem.getArticle().toString(), "item.name", newItem.getName());
+			return new Message.CharacterFoundItem(character, newItem).toString();
+		} else {
+			return "";
 		}
-		return result;
 	}
 }

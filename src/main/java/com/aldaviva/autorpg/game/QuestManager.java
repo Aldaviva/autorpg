@@ -1,7 +1,6 @@
 package com.aldaviva.autorpg.game;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
@@ -61,7 +60,6 @@ public class QuestManager implements PeriodicUpdater {
 	@Transactional
 	public void update(){
 		List<Quest> quests = Quest.findByActive();
-//		LOGGER.debug("Updating "+quests.size()+" quests.");
 		for(Quest quest : quests){
 			updateQuest(quest);
 			quest.merge();
@@ -74,7 +72,6 @@ public class QuestManager implements PeriodicUpdater {
 			remove(quest);
 			bulletinManager.publish(new Bulletin("Every character in this quest is offline. Quest over."));
 		} else {
-//			LOGGER.debug("Updating quest progress ("+onlineCharacters+" of its characters are online)");
 			int experienceDelta = (onlineCharacters * onlineCharacters);
 			quest.setExpRemaining(quest.getExpRemaining() - experienceDelta);
 			
@@ -93,8 +90,7 @@ public class QuestManager implements PeriodicUpdater {
 		
 		switch(quest.getStep()){
 			case 1: //just starting the quest
-				Iterator<Character> characterIterator = quest.getCharacters().iterator();
-				result.add(Message.QUEST_HAS_CHARACTERS.fillIn("characterA", characterIterator.next().getName(), "characterB", characterIterator.next().getName(), "characterC", characterIterator.next().getName(), "characterD", characterIterator.next().getName()));
+				result.add(new Message.QuestHasCharacters(quest));
 				result.add(quest.getMission());
 				result.add(quest.getStep1());
 				break;
@@ -111,38 +107,46 @@ public class QuestManager implements PeriodicUpdater {
 				giveReward(quest);
 				remove(quest);
 				break;
+			default:
+				throw new IllegalStateException("Quest state is not in the range [1, 4].");
 		}
 		
 		return result;
 	}
 	
 	private Bulletin giveReward(Quest quest){
+		Bulletin bulletin;
+		LOGGER.debug("Giving rewards for quest completion");
 		
 		switch(quest.getReward()){
-		case EXPERIENCE:
-			SummaryStatistics stats = new SummaryStatistics();
-			for(Character character : quest.getCharacters()){
-				stats.addValue(character.getExperience());
-			}
-			
-			double avgTeamExperience = stats.getMean();
-			int reward = (int) Math.round(avgTeamExperience * (Utils.getRandomInt(10, 25)/100));
-			
-			for(Character character : quest.getCharacters()){
-				character.setExperience(character.getExperience() + reward);
-			}
-			return new Bulletin("Each character gains "+reward+" experience.");
-			
-		case RARE_ITEM:
-			for(Character character : quest.getCharacters()){
-				Item newItem = Item.findRandomByRarity(true);
-				characterItemManager.offerCharacterAnItem(newItem, character);
-			}
-			return new Bulletin("The adventurers have uncovered a treasure chest.");
-			
-		default:
-			throw new IllegalStateException("Quest reward must be EXPERIENCE or RARE_ITEM.");
+			case EXPERIENCE:
+				SummaryStatistics stats = new SummaryStatistics();
+				for(Character character : quest.getCharacters()){
+					stats.addValue(character.getExperience());
+				}
+				
+				double avgTeamExperience = stats.getMean();
+				int reward = (int) Math.round(avgTeamExperience * ((double)Utils.getRandomInt(10, 25)/100));
+				
+				for(Character character : quest.getCharacters()){
+					character.setExperience(character.getExperience() + reward);
+				}
+				bulletin = new Bulletin(new Message.CharactersAllGainExperience(quest.getCharacters(), reward));
+				break;
+				
+			case RARE_ITEM:
+				bulletin = new Bulletin(new Message.CharactersFoundItems(quest.getCharacters()));
+				for(Character character : quest.getCharacters()){
+					Item newItem = Item.findRandomByRarity(true);
+					characterItemManager.offerCharacterAnItem(newItem, character);
+					bulletin.add(new Message.CharacterFoundItem(character, newItem));
+				}
+				break;
+				
+			default:
+				throw new IllegalStateException("Quest reward must be EXPERIENCE or RARE_ITEM.");
 		}
+		return bulletin;
 	}
 	
 	private void remove(Quest quest){

@@ -68,17 +68,23 @@ public class Bot extends PircBot implements BulletinHandler {
 			argsExceptFirstArg = StringUtils.split(message, null, 3)[2];
 		}
 		
-		
 		String userhost = sender + '@' + hostname;
-		IrcPlayerAction action = IrcPlayerAction.getByName(argv[0]);
-
+		
 		try {
-			if (action == null) {
+			try {
+				String actionClassName = IrcPlayerAction.class.getName() + "$" + StringUtils.capitalize(argv[0]);
+				IrcPlayerAction action = (IrcPlayerAction) Class.forName(actionClassName).newInstance();
+				if (argv.length - 1 < action.getNumberOfRequiredArguments()) {
+					throw new AutoRPGException.TooFewArgumentsError(action);
+				} else {
+					sendMessagesSplitByNewline(sender, action.perform(sender, userhost, argv, argsExceptFirstArg));
+				}
+			} catch (InstantiationException e) {
 				throw new AutoRPGException.UnknownActionError();
-			} else if (argv.length - 1 < action.getNumberOfRequiredArguments()) {
-				throw new AutoRPGException.TooFewArgumentsError(action);
-			} else {
-				sendMessagesSplitByNewline(sender, action.perform(sender, userhost, argv, argsExceptFirstArg));
+			} catch (IllegalAccessException e) {
+				throw new AutoRPGException.UnknownActionError();
+			} catch (ClassNotFoundException e) {
+				throw new AutoRPGException.UnknownActionError();
 			}
 			
 		} catch (AutoRPGException e) {

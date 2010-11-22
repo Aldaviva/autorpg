@@ -41,9 +41,9 @@ public class LoginAction implements PlayerAction {
 			
 			return "Logged in as "+player.getName()+".";
 		} catch (LoginFailedBadPasswordError e){
-			return IrcMessage.WRONG_PASSWORD.fillIn();
+			return new IrcMessage.WrongPassword().toString();
 		} catch (LoginFailedNoSuchPlayerError e){
-			return IrcMessage.LOGIN_FAILED_NO_SUCH_USER_SUGGESTION.fillIn();
+			return new IrcMessage.LoginFailedNoSuchUserSuggestion().toString();
 		}
 	}
 	

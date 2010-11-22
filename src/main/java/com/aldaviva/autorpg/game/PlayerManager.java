@@ -16,12 +16,11 @@ import com.aldaviva.autorpg.AutoRPGException.LoginFailedNoSuchPlayerError;
 import com.aldaviva.autorpg.AutoRPGException.MustRegisterToCreateAvatarError;
 import com.aldaviva.autorpg.Utils;
 import com.aldaviva.autorpg.data.entities.Character;
-import com.aldaviva.autorpg.data.entities.Configuration;
 import com.aldaviva.autorpg.data.entities.Player;
-import com.aldaviva.autorpg.data.enums.ConfigurationKey;
 import com.aldaviva.autorpg.data.types.MapPoint;
 import com.aldaviva.autorpg.display.bulletin.Bulletin;
 import com.aldaviva.autorpg.display.bulletin.BulletinManager;
+import com.aldaviva.autorpg.display.irc.Bot;
 import com.aldaviva.autorpg.display.irc.IrcMessage;
 import com.aldaviva.autorpg.game.actions.LoginAction;
 
@@ -33,6 +32,9 @@ public class PlayerManager {
 	
 	@Autowired
 	private BulletinManager bulletinManager;
+
+	@Autowired
+	private Bot bot;
 	
 	public Player login(String playerName, String plainPassword, String userhost) throws LoginFailedNoSuchPlayerError, LoginFailedBadPasswordError{
 		Player player = Player.findPlayer(playerName);
@@ -62,7 +64,7 @@ public class PlayerManager {
 		return false;
 	}
 	
-	public void register(String userhost, String playerName, String password) throws DuplicatePlayerError{
+	public Player register(String userhost, String playerName, String password) throws DuplicatePlayerError{
 		if(null != Player.findByUserhost(userhost)){
 			throw new DuplicatePlayerError();
 		}
@@ -78,6 +80,7 @@ public class PlayerManager {
 		
 		player.persist();
 		LOGGER.info("Player "+player.getName()+" registered.");
+		return player;
 	}
 	
 	public Character createCharacter(String userhost, String avatarName, String designation, boolean female) throws MustRegisterToCreateAvatarError{
@@ -141,9 +144,9 @@ public class PlayerManager {
 			charactersJoining.addAll(Character.findCharactersByPlayer(candidatePlayer).getResultList());
 			Bulletin rejoinedBulletin = LoginAction.createCharactersRejoinedBulletin(charactersJoining);
 			bulletinManager.publish(rejoinedBulletin, false);
-			return IrcMessage.WELCOME_REJOINED.fillIn("playerName", candidatePlayer.getName());
+			return new IrcMessage.WelcomeRejoined(candidatePlayer).toString();
 		} else {
-			return IrcMessage.WELCOME_NEW_PLAYER.fillIn("botNickname", Configuration.getValue(ConfigurationKey.BOT_NICKNAME));
+			return new IrcMessage.WelcomeNewPlayer(bot).toString();
 		}
 	}
 	

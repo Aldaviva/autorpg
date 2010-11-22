@@ -1,0 +1,36 @@
+body {
+	padding-left: 10px;
+	font: 1em "Trade Gothic";
+	color: white;
+	background: #070707 url('../images/page_bg_tile.png');
+}
+
+a {
+	text-decoration: none;
+}
+
+.page {
+	padding: 24px;
+	margin-left: 166px;
+}
+
+.border {
+	border: 9px solid #404040;
+}
+
+/* Fonts */
+
+@font-face {
+  font-family: "Trade Gothic";
+  src: url('../fonts/TradeGothicLTStd.otf') format("opentype");
+}
+@font-face {
+  font-family: "Trade Gothic";
+  font-weight: bold;
+  src: url('../fonts/TradeGothicLTStd-Bold.otf') format("opentype");
+}
+@font-face {
+  font-family: "Trade Gothic";
+  font-style: italic;
+  src: url('../fonts/TradeGothicLTStd-Obl.otf') format("opentype");
+}

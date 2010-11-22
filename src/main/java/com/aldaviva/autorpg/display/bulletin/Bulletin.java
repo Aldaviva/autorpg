@@ -14,6 +14,10 @@ public class Bulletin {
 		
 	}
 	
+	public Bulletin(Message message){
+		this(message.toString());
+	}
+	
 	public void add(String str){
 		if(builder.length() != 0){
 			builder.append(" ");
@@ -21,8 +25,16 @@ public class Bulletin {
 		builder.append(str);
 	}
 	
+	public void add(Message message){
+		add(message.toString());
+	}
+	
 	public void addLine(String str){
 		add("\n"+str);
+	}
+	
+	public void add(Bulletin bulletin){
+		addLine(bulletin.toString());
 	}
 	
 	public boolean isEmpty(){

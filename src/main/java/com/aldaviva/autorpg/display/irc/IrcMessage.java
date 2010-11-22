@@ -2,59 +2,119 @@ package com.aldaviva.autorpg.display.irc;
 
 import org.jibble.pircbot.Colors;
 
-public enum IrcMessage {
+import com.aldaviva.autorpg.data.entities.Character;
+import com.aldaviva.autorpg.data.entities.Player;
+import com.aldaviva.autorpg.data.enums.ConfigurationKey;
+import com.aldaviva.autorpg.display.bulletin.Message;
+import com.aldaviva.autorpg.display.bulletin.Style;
+
+public abstract class IrcMessage extends Message {
+
+	private IrcMessage(String message){
+		super(message);
+	}
 	
-	REGISTERED_SUCCESS("Welcome to the game, "+Colors.BOLD+"${playerName}"+Colors.NORMAL+"! You have successfully registered."),
-	REGISTER_HINT("To register a new Player account, use "+botQuery("register", "playerName", "password")+"."),
-	CREATE_HINT("Use "+botQuery("create", "name", "gender", "designation")+" to create a character."),
-	CREATED_AVATAR(Colors.BOLD+"${name}"+Colors.NORMAL+", the Level 1 ${designation}, has joined the realm."),
-	LOGIN_FAILED_NO_SUCH_USER_SUGGESTION("Try creating the user account with "+botQuery("create", "name", "password")+"."),
-	NO_SUCH_CHARACTER_SUGGESTION("Check the list of characters using "+botQuery("list", "characters")+"."),
-	WRONG_PASSWORD("YOU DIDN'T SAY THE MAGIC WORD!!!"),
-	WRONG_PASSWORD_SUGGESTION("If you have forgotten your password, contact the administrative team at ${adminEmail}."),
-	MULTIPLE_CHARACTERS_SUGGESTION("To create more characters for your player, use "+botQuery("create", "name", "class")+" multiple times."),
-	LOGIN_REQUIRED("To register as a new player, use "+botQuery("register", "yourName", "password")+". To log in as an existing player, use "+botQuery("login", "user", "password")),
-	CONFIG_SET(Colors.BOLD+"${type}"+Colors.NORMAL+" = ${value}"),
-	CONFIG_GET(Colors.BOLD+"${type}"+Colors.NORMAL+" == ${value}"),
-	CONFIGURATION_INCOMPLETE_HINT("Try setting this configuration using "+botQuery("CONFIG", "${configurationKey}", "value")),
-	HELP("AutoRPG is a simple IRC-based game where players remain logged in as long as possible, and their characters will automatically go on adventures.\n" +
+	private static String botQuery(IrcPlayerAction action){
+		return Colors.NORMAL + Colors.BOLD + action.getSyntax() + Colors.NORMAL;
+	}
+	
+	public static class RegisteredPlayerSuccessfully extends IrcMessage {
+		public RegisteredPlayerSuccessfully(Player player){
+			super("Welcome to the game, " + Colors.BOLD + player.getName() + Colors.NORMAL + "! You have successfully registered.");
+		}
+	}
+	
+	public static class RegisterHint extends IrcMessage {
+		public RegisterHint(){
+			super("To register a new Player account, use "+botQuery(new IrcPlayerAction.Register()) + ".");
+		}
+	}
+	
+	public static class CreateCharacterHint extends IrcMessage {
+		public CreateCharacterHint() {
+			super("Use "+botQuery(new IrcPlayerAction.Create()) + " to create a character.");
+		}
+	}
+	
+	public static class CreatedCharacterSuccessfully extends IrcMessage {
+		public CreatedCharacterSuccessfully(Character character){
+			super(Style.CHARACTER_NAME + character.getName() + Style.NORMAL + ", the Level 1 "+character.getDesignation() + ", has joined the realm. Hell's minions grow stronger.");
+		}
+	}
+	
+	public static class LoginFailedNoSuchUserSuggestion extends IrcMessage {
+		public LoginFailedNoSuchUserSuggestion(){
+			super("Try registering the user account with " + botQuery(new IrcPlayerAction.Register()) + ".");
+		}
+	}
+	
+	public static class NoSuchCharacterSuggestion extends IrcMessage {
+		public NoSuchCharacterSuggestion(){
+			super("Check the list of characters on the website.");
+		}
+	}
+	
+	public static class WrongPassword extends IrcMessage {
+		public WrongPassword(){
+			super("YOU DIDN'T SAY THE MAGIC WORD!!!");
+		}
+	}
+	
+	public static class WrongPasswordSuggestion extends IrcMessage {
+		public WrongPasswordSuggestion(String adminEmail){
+			super("If you have forgotten your password, contact the administrative team at " + adminEmail+".");
+		}
+	}
+	
+	public static class MultipleCharactersSuggestion extends IrcMessage {
+		public MultipleCharactersSuggestion() {
+			super("To create more characters for your player, use " + botQuery(new IrcPlayerAction.Cheat()) + " multiple times.");
+		}
+	}
+	
+	public static class LoginRequired extends IrcMessage {
+		public LoginRequired() {
+			super("To register as a new Player, use " + botQuery(new IrcPlayerAction.Register()) + ". To log in as an existing Player, use " + botQuery(new IrcPlayerAction.Login()) + ".");
+		}
+	}
+	
+	public static class ConfigSet extends IrcMessage {
+		public ConfigSet(ConfigurationKey key, String value) {
+			super(Colors.BOLD + key + Colors.NORMAL + " = " + value);
+		}
+	}
+	
+	public static class ConfigGet extends IrcMessage {
+		public ConfigGet(ConfigurationKey key, String value) {
+			super(Colors.BOLD + key + Colors.NORMAL + " == " + value);
+		}
+	}
+	
+	public static class ConfigurationIncompleteHint extends IrcMessage {
+		public ConfigurationIncompleteHint(ConfigurationKey key){
+			super("Try setting this configuration using " + botQuery(new IrcPlayerAction.Config()) + ".");
+		}
+	}
+	
+	public static class Help extends IrcMessage {
+		public Help(Bot bot){
+			super("AutoRPG is a simple IRC-based game where players remain logged in as long as possible, and their characters will automatically go on adventures.\n" +
 			"To start playing, use the REGISTER command to make a Player account for yourself:\n"+
-			"  "+Colors.BOLD+"/msg ${botNickname} "+botQuery("REGISTER", "player name", "password")+"\n"+
+			"  "+Colors.BOLD+"/msg " + bot.getNick() + " " + botQuery(new IrcPlayerAction.Register())+"\n"+
 			"Once you have a Player account, you can CREATE Characters:\n"+
-			"  "+Colors.BOLD+"/msg ${botNickname} "+botQuery("CREATE", "character name", "gender", "designation")),
-	WELCOME_NEW_PLAYER("Welcome to AutoRPG. To get started, type "+Colors.BOLD+"/msg ${botNickname} HELP"+Colors.NORMAL+"."),
-	WELCOME_REJOINED("Automatically logged in as ${playerName}.");
-	
-	private String message;
-	
-	private IrcMessage(final String message){
-		this.message = message;
+			"  "+Colors.BOLD+"/msg " + bot.getNick() + " " + botQuery(new IrcPlayerAction.Create()));
+		}
 	}
 	
-	public String fillIn(String... replacementPairs){
-		if(replacementPairs.length % 2 != 0){
-			throw new IllegalArgumentException("An even number of arguments is required.");
+	public static class WelcomeNewPlayer extends IrcMessage {
+		public WelcomeNewPlayer(Bot bot){
+			super("Welcome to AutoRPG. To get started, type " + Colors.BOLD+"/msg " + bot.getNick() + " HELP"+Colors.NORMAL+"." );
 		}
-		
-		String result = message;
-		for(int argNum=0; argNum < replacementPairs.length; argNum += 2){
-			result = result.replace("${"+replacementPairs[argNum]+"}", replacementPairs[argNum+1]);
-		}
-		
-		return result;
 	}
 	
-	private static String botQuery(String command, String... arguments){
-		
-		StringBuilder buf = new StringBuilder();
-		buf.append(Colors.NORMAL + Colors.BOLD + command.toUpperCase() + Colors.NORMAL);
-		for (String argument : arguments) {
-			buf.append(' ').append(Colors.BOLD + Colors.UNDERLINE + argument + Colors.NORMAL);
+	public static class WelcomeRejoined extends IrcMessage {
+		public WelcomeRejoined(Player player){
+			super("Automatically logged in as " + player.getName() + ".");
 		}
-		buf.append(Colors.NORMAL);
-		return buf.toString();
 	}
-	
-	
-	
 }

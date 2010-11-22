@@ -1,0 +1,55 @@
+.navigationColumn {
+	width: 166px;
+	float: left;
+}
+
+.navigationColumn h1,
+.navigationColumn .navigation {
+	background-color: #801818;
+	margin-bottom: 7px;
+}
+
+.navigationColumn h1 {
+	background-image: url('../images/logo.png');
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	/*text-indent: -9999px;*/
+	height: 152px;
+	padding: 7px 0;
+}
+
+.navigationColumn h1 a {
+	display: block;
+	height: inherit;
+	text-indent: -9999px;
+	margin: 0 7px;
+}
+
+.navigationColumn .navigation {
+	padding: 10px;
+}
+
+.navigation a {
+	color: white;
+	font: bold 1.2500em "Trade Gothic"; /* 20px */
+	text-transform: uppercase;
+	padding: 6px 8px;
+	text-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.45);
+	display: block;
+	line-height: 0.8500em; /* 17px */
+}
+
+.navigation .chevron {
+	float: right;
+	font-size: 1.4000em; /* 28px */
+	line-height: 0.3571em; /* 11px */
+}
+
+.navigation a:hover, .navigation .current {
+	background-image: url('../images/texture_navLink.gif');
+	text-shadow: none;
+}
+
+.navigation a:hover .chevron, .navigation .current .chevron {
+	margin-right: -1px;
+}

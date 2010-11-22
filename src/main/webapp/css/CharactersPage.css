@@ -1,0 +1,76 @@
+.character {
+	display: inline-block;
+	vertical-align: top;
+
+	background: #060606 url('../images/characters_bg_tile.png');
+	
+	border-top: none;
+	margin: 0 24px 24px 0;
+	width: 274px;
+	height: 336px;
+}
+
+.character h3 {
+	background-color: #404040;
+	text-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.45);
+	
+	padding: 5px 0;
+	
+	font: bold 1.4375em "Trade Gothic";
+	text-transform: uppercase;
+	text-align: center;
+}
+
+.character .content {
+	padding: 21px;
+}
+
+.character .number {
+	color: #d92929;
+}
+
+.character .designation {
+	font-size: 0.9375em;
+	text-align: center;
+	margin-bottom: 16px;
+}
+
+.character .level,
+.character .experience {
+	font-size: 0.8125em;
+	text-transform: uppercase;
+	text-align: center;
+}
+
+.character .experience {
+	font-size: 0.6875em;
+}
+
+.character .progress {
+	height: 10px;
+	margin: 2px 0 3px;
+	background: #1b1b1b url('../images/texture_progress_incomplete.gif');
+}
+
+.character .progress .progressComplete {
+	background: #580101 url('../images/texture_progress_complete.gif');
+	height: inherit;
+}
+
+.character h4 {
+	font-size: 0.8750em;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin: 19px 0 3px;
+}
+
+.character .items li {
+	font-size: 0.8125em;
+	line-height: 1.1250em;
+	margin-left: 8px;
+	text-indent: -4px;
+}
+
+.character .items .rare {
+	color: #d92929;
+}

@@ -28,85 +28,86 @@ import com.aldaviva.autorpg.data.enums.RewardType;
 @RooEntity(identifierField = "name", identifierType = java.lang.String.class)
 public class Quest implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private static final int STEPS = 3;
-    
-    public static final int CHARACTERS_PER_QUEST = 4;
 
-    @Id
-    private String name;
+	public static final int CHARACTERS_PER_QUEST = 4;
 
-    @NotNull
-    private Integer level;
+	@Id
+	private String name;
 
-    @NotNull
-    private String mission;
+	@NotNull
+	private Integer level;
 
-    @NotNull
-    private Integer expRemaining;
+	@NotNull
+	private String mission;
 
-    @NotNull
-    private Integer step;
+	@NotNull
+	private Integer expRemaining;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private RewardType reward;
+	@NotNull
+	private Integer step;
 
-    @NotNull
-    private String step1;
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	private RewardType reward;
 
-    @NotNull
-    private String step1done;
+	@NotNull
+	private String step1;
 
-    @NotNull
-    private String step2;
+	@NotNull
+	private String step1done;
 
-    @NotNull
-    private String step2done;
+	@NotNull
+	private String step2;
 
-    @NotNull
-    private String step3;
+	@NotNull
+	private String step2done;
 
-    @NotNull
-    private String step3done;
+	@NotNull
+	private String step3;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "quest")
-    private Set<com.aldaviva.autorpg.data.entities.Character> characters = new HashSet<Character>();
+	@NotNull
+	private String step3done;
 
-    public String getName() {
-        return name;
-    }
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "quest")
+	private Set<com.aldaviva.autorpg.data.entities.Character> characters = new HashSet<Character>();
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public static Quest findRandomByInactive() {
-        EntityManager em = entityManager();
-        TypedQuery<Quest> q = em.createQuery("SELECT Quest FROM Quest AS quest WHERE step = 0 ORDER BY random()", Quest.class);
-        q.setMaxResults(1);
-        return q.getSingleResult();
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public static List<Quest> findByActive() {
-        EntityManager em = entityManager();
-        TypedQuery<Quest> q = em.createQuery("SELECT Quest FROM Quest AS quest WHERE step != 0", Quest.class);
-        return q.getResultList();
-    }
+	public static Quest findRandomByInactive() {
+		EntityManager em = entityManager();
+		TypedQuery<Quest> q = em.createQuery("SELECT Quest FROM Quest AS quest WHERE step = 0 ORDER BY random()", Quest.class);
+		q.setMaxResults(1);
+		return q.getSingleResult();
+	}
 
-    @Transient
-    public int countOnlineCharacters() {
-        return characters.size();
-    }
+	public static List<Quest> findByActive() {
+		EntityManager em = entityManager();
+		TypedQuery<Quest> q = em.createQuery("SELECT Quest FROM Quest AS quest WHERE step != 0", Quest.class);
+		return q.getResultList();
+	}
 
-    @Transient
-    public int getExpTotal() {
-        return level * 24 * 60 * 60 * CHARACTERS_PER_QUEST * CHARACTERS_PER_QUEST;
-    }
+	@Transient
+	public int countOnlineCharacters() {
+		return characters.size();
+	}
 
-    @Transient
-    public int calculateCurrentStep() {
-        return (int) Math.floor((STEPS * (getExpRemaining() / getExpTotal())) + 1);
-    }
+	@Transient
+	public int getExpTotal() {
+		 return level * 24 * 60 * 60 * CHARACTERS_PER_QUEST * CHARACTERS_PER_QUEST;
+//		return 64;
+	}
+
+	@Transient
+	public int calculateCurrentStep() {
+		return (int) Math.floor((STEPS * (1-((double) getExpRemaining() / getExpTotal()))) + 1);
+	}
 }

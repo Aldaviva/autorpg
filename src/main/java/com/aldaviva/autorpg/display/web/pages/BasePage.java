@@ -19,7 +19,7 @@ public class BasePage extends WebPage {
 		add(CSSPackageResource.getHeaderContribution(CSS_DIR_PREFIX+"Reset.css"));
 		add(CSSPackageResource.getHeaderContribution(CSS_DIR_PREFIX+"Global.css"));
 		
-		Navigation navigation = new Navigation("navigation");
+		Navigation navigation = new Navigation("navigation", this);
 		add(navigation);
 		
 		add(new Label("pageTitle", new StringResourceModel("navLinks.text."+getClass().getSimpleName(), navigation, null)));

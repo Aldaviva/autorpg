@@ -15,7 +15,7 @@ public class HelpAction implements PlayerAction {
 	
 	@Override
 	public String perform(String sender, String userhost, String[] argv, String argsExceptFirstArg) throws AutoRPGException {
-		return IrcMessage.HELP.fillIn("botNickname", bot.getNick());
+		return new IrcMessage.Help(bot).toString();
 	}
 
 	@Override
